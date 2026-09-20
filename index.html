@@ -1,0 +1,3159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快樂森林學堂・SEL 學習特攻隊 (樹下共讀繪本版)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tone.js 音效庫 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  <!-- Google Fonts: 思源黑體與圓潤手寫字型 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+TC:wght@500;700;900&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --forest-dark: #072111;
+      --forest-main: #185228;
+      --forest-bright: #2E8544;
+      --forest-bg-start: #F4FAF6;
+      --forest-bg-mid: #E8F5EC;
+      --forest-bg-end: #D8ECE0;
+    }
+
+    body {
+      font-family: 'Noto Sans TC', 'Zen Maru Gothic', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(145deg, var(--forest-bg-start) 0%, var(--forest-bg-mid) 50%, var(--forest-bg-end) 100%);
+      color: #06180C;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 100vh;
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* 淺綠色森林木紋看板 */
+    .game-wood-sign {
+      background: linear-gradient(180deg, #EDF7F0 0%, #D8EFE0 55%, #C7E6D1 100%);
+      border: 3.5px solid #144E24;
+      border-radius: 26px;
+      box-shadow: 
+        0 6px 0 #0B3618,
+        0 10px 20px rgba(11, 54, 24, 0.12),
+        inset 0 2px 0 rgba(255, 255, 255, 0.9);
+      position: relative;
+    }
+
+    /* 繪本卡片外框 */
+    .game-card-panel {
+      background: #FFFFFF;
+      border: 3.5px solid #285E34;
+      border-radius: 28px;
+      box-shadow: 
+        0 8px 0 #184222,
+        0 14px 24px rgba(24, 66, 34, 0.1),
+        inset 0 2px 0 rgba(255, 255, 255, 1);
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .game-card-panel:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 0 #184222, 0 18px 28px rgba(24, 66, 34, 0.14);
+    }
+
+    /* 森林綠晶亮遊戲按鈕 */
+    .game-wood-btn {
+      background: linear-gradient(180deg, #4AA05C 0%, #2E793F 60%, #1E5C2D 100%);
+      border: 2.5px solid #113C1C;
+      border-radius: 20px;
+      color: #FFFFFF;
+      box-shadow: 0 4px 0 #0C2B14, 0 6px 12px rgba(12, 43, 20, 0.2), inset 0 1.5px 0 rgba(255, 255, 255, 0.5);
+      transition: all 0.12s ease;
+      cursor: pointer;
+      text-shadow: 0 1.5px 2px rgba(0, 0, 0, 0.6);
+    }
+    .game-wood-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #0C2B14;
+    }
+
+    .game-gold-btn {
+      background: linear-gradient(180deg, #FAB839 0%, #E78C16 60%, #B86704 100%);
+      border: 2.5px solid #633502;
+      border-radius: 20px;
+      color: #FFFFFF;
+      box-shadow: 0 4px 0 #472601, 0 6px 12px rgba(71, 38, 1, 0.25), inset 0 1.5px 0 rgba(255, 255, 255, 0.6);
+      transition: all 0.12s ease;
+      cursor: pointer;
+      text-shadow: 0 1.5px 2px rgba(0, 0, 0, 0.45);
+    }
+    .game-gold-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #472601;
+    }
+
+    /* 低年級學扶專用：主角級巨型圓潤相框 */
+    .game-avatar-frame {
+      position: relative;
+      border-radius: 28px;
+      padding: 5px;
+      background: linear-gradient(135deg, #EFFBF2 0%, #D6F0DB 100%);
+      border: 4px solid #295F35;
+      box-shadow: 
+        0 6px 0 #183E21, 
+        0 10px 18px rgba(24, 62, 33, 0.16),
+        inset 0 2px 0 rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .game-avatar-frame:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 0 #183E21, 0 14px 22px rgba(24, 62, 33, 0.22);
+    }
+    .game-avatar-frame:active {
+      transform: translateY(3px) scale(0.98);
+      box-shadow: 0 2px 0 #183E21;
+    }
+
+    /* 學生姓名靠右且嚴格不換行 */
+    .student-name-row {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+      flex-wrap: nowrap !important;
+      white-space: nowrap !important;
+      word-break: keep-all !important;
+      width: auto !important;
+      gap: 3px;
+      padding: 2px 0;
+      overflow: visible;
+    }
+
+    /* 直式注音字元：加大漢字與注音比重，保護聲調與行高不被擠壓 */
+    .zhuyin-char {
+      display: inline-flex !important;
+      align-items: center !important;
+      flex-shrink: 0 !important;
+      white-space: nowrap !important;
+      line-height: 1;
+      margin: 0 2px;
+      position: relative;
+    }
+    .zhuyin-char .hanzi {
+      font-size: clamp(1.4rem, 2.1vw, 1.85rem);
+      font-weight: 900;
+      color: #06180C;
+      letter-spacing: -0.5px;
+    }
+    .zhuyin-char .bpmf-col {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.46em;
+      line-height: 0.95;
+      font-weight: 900;
+      color: #10421E;
+      margin-left: 4px;
+      position: relative;
+      user-select: none;
+    }
+    .zhuyin-char .tone {
+      position: absolute;
+      right: -7px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.02em;
+      font-weight: 900;
+      color: #C91F18;
+    }
+    .zhuyin-char .light-tone {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.1em;
+      font-weight: 900;
+      color: #C91F18;
+    }
+
+    /* 專為學扶學童打造：大字大圖心情卡 */
+    .mood-spell-card {
+      background: #FFFFFF;
+      border-radius: 26px;
+      position: relative;
+      border: 3.5px solid;
+      box-shadow: 
+        0 6px 0 rgba(0, 0, 0, 0.15),
+        0 10px 18px rgba(0, 0, 0, 0.08),
+        inset 0 2px 0 rgba(255, 255, 255, 0.9);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+    .mood-spell-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 0 rgba(0, 0, 0, 0.16), 0 16px 24px rgba(0, 0, 0, 0.12);
+    }
+    .mood-spell-card:active {
+      transform: translateY(3px) scale(0.98);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .pencil-shading-box {
+      background: radial-gradient(circle at 45% 40%, rgba(255, 255, 255, 0.95) 0%, rgba(245, 248, 244, 0.8) 60%, rgba(230, 240, 232, 0.6) 100%);
+      border-radius: 20px;
+      border: 2px dashed rgba(40, 94, 52, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mood-spell-unit {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      white-space: nowrap !important;
+      line-height: 1;
+      margin: 0 5px;
+      position: relative;
+    }
+    .mood-spell-unit .hanzi {
+      font-size: clamp(2rem, 2.7vw, 2.65rem);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.06);
+    }
+    .mood-spell-unit .bpmf-col {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.52em;
+      line-height: 0.98;
+      font-weight: 900;
+      margin-left: 6px;
+      position: relative;
+      user-select: none;
+    }
+    .mood-spell-unit .tone {
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.05em;
+      font-weight: 900;
+      color: #D92318;
+    }
+    .mood-spell-unit .light-tone {
+      position: absolute;
+      top: -9px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.1em;
+      font-weight: 900;
+      color: #D92318;
+    }
+
+    /* 禮物小舖大字大圖直式注音卡片 */
+    .shop-spell-card {
+      background: #FFFFFF;
+      border-radius: 26px;
+      border: 3.5px solid #F6BE3C;
+      box-shadow: 
+        0 6px 0 #9A5405,
+        0 10px 18px rgba(154, 84, 5, 0.12),
+        inset 0 2px 0 rgba(255, 255, 255, 0.9);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .shop-spell-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 9px 0 #9A5405, 0 16px 24px rgba(154, 84, 5, 0.18);
+    }
+
+    .shop-spell-unit {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      white-space: nowrap !important;
+      line-height: 1;
+      margin: 1px 2.5px;
+      position: relative;
+    }
+    .shop-spell-unit .hanzi {
+      font-size: clamp(1.45rem, 2.05vw, 1.95rem);
+      font-weight: 900;
+      letter-spacing: -0.3px;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.06);
+    }
+    .shop-spell-unit .bpmf-col {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.48em;
+      line-height: 0.95;
+      font-weight: 900;
+      margin-left: 4px;
+      position: relative;
+      user-select: none;
+    }
+    .shop-spell-unit .tone {
+      position: absolute;
+      right: -6.5px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.05em;
+      font-weight: 900;
+      color: #D92318;
+    }
+    .shop-spell-unit .light-tone {
+      position: absolute;
+      top: -7.5px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.05em;
+      font-weight: 900;
+      color: #D92318;
+    }
+
+    /* 大樹澆灌大舞台容器 */
+    .tree-large-stage {
+      position: relative;
+      background: radial-gradient(circle at 50% 35%, #FFFFFF 0%, #F5FBF6 65%, #E3F2E7 100%);
+      border: 3.5px solid #235F30;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 
+        0 8px 0 #133D1C,
+        0 14px 28px rgba(19, 61, 28, 0.15),
+        inset 0 3px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    @keyframes sparkle-rotate {
+      0% { transform: rotate(0deg) scale(0.9); opacity: 0.75; }
+      50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+      100% { transform: rotate(360deg) scale(0.9); opacity: 0.75; }
+    }
+    .animate-sparkle-spin { animation: sparkle-rotate 4s linear infinite; }
+
+    @keyframes apple-sway-float {
+      0%, 100% { transform: translate(-50%, -50%) rotate(0deg) translateY(0px); }
+      33% { transform: translate(-50%, -50%) rotate(4deg) translateY(-3px); }
+      66% { transform: translate(-50%, -50%) rotate(-3deg) translateY(2px); }
+    }
+    .animate-apple-sway-idle { animation: apple-sway-float 3.6s ease-in-out infinite; }
+
+    @keyframes apple-magical-burst {
+      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; filter: brightness(2) drop-shadow(0 0 16px #FFF494); }
+      65% { transform: translate(-50%, -50%) scale(1.35); opacity: 1; filter: brightness(1.3) drop-shadow(0 0 20px #FFD700); }
+      85% { transform: translate(-50%, -50%) scale(0.92); }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    .animate-apple-bloom { animation: apple-magical-burst 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+    .apple-bud-unripe { transform: translate(-50%, -50%); transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .apple-bud-unripe:hover { transform: translate(-50%, -50%) scale(1.18); }
+
+    @keyframes water-drop-fall {
+      0% { transform: translateY(-30px) scale(0.6); opacity: 0; }
+      30% { opacity: 1; transform: translateY(0px) scale(1.1); }
+      70% { opacity: 1; transform: translateY(35px) scale(0.9); }
+      100% { transform: translateY(65px) scale(1.4); opacity: 0; }
+    }
+    .animate-water-drop { animation: water-drop-fall 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+    .game-stamp-badge {
+      transition: all 0.16s ease;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .game-stamp-badge.active-reading { background: #E8F8E1; border-color: #388429; color: #15450C; box-shadow: 0 2.5px 0 #28631C; }
+    .game-stamp-badge.active-task { background: #FFF3DF; border-color: #E27B1B; color: #613104; box-shadow: 0 2.5px 0 #A85408; }
+    .game-stamp-badge.active-tidy { background: #E5F3FA; border-color: #308AB3; color: #0F3A4E; box-shadow: 0 2.5px 0 #1D6382; }
+    .game-stamp-badge.inactive { background: #F2F7F3; border-color: #D1E1D3; color: #79947E; opacity: 0.8; }
+
+    .scrollbar-hidden::-webkit-scrollbar { display: none; }
+    .scrollbar-hidden { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="p-3 md:p-5 flex flex-col justify-between select-none">
+
+  <!-- 頂部標題看板與全局功能按鈕 -->
+  <header class="w-full max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 mb-4">
+    <div class="game-wood-sign px-5 py-2.5 flex items-center gap-3 text-[#06180C]">
+      <div class="w-11 h-11 flex-shrink-0">
+        <svg viewBox="0 0 76 76" class="w-11 h-11">
+          <circle cx="38" cy="38" r="32" fill="#4CAF50"/>
+          <circle cx="38" cy="38" r="24" fill="#8CE85D"/>
+          <circle cx="46" cy="32" r="6" fill="#FF3B30"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-2xl md:text-3xl font-black text-[#06180C] flex items-center tracking-tight">
+          <span class="zhuyin-char"><span class="hanzi">森</span><span class="bpmf-col"><span>ㄙ</span><span>ㄣ</span></span></span>
+          <span class="zhuyin-char"><span class="hanzi">林</span><span class="bpmf-col"><span>ㄌ</span><span>ㄧ</span><span>ㄣ</span><span class="tone">ˊ</span></span></span>
+          <span class="zhuyin-char"><span class="hanzi">學</span><span class="bpmf-col"><span>ㄒ</span><span>ㄩ</span><span>ㄝ</span><span class="tone">ˊ</span></span></span>
+          <span class="zhuyin-char"><span class="hanzi">堂</span><span class="bpmf-col"><span>ㄊ</span><span>ㄤ</span><span class="tone">ˊ</span></span></span>
+          <span class="text-xl md:text-2xl text-[#0B4019] font-black ml-2">SEL 學習特攻隊</span>
+          <span class="text-xs bg-[#E2F5E7] border-2 border-[#206935] text-[#0A3616] px-2.5 py-0.5 rounded-full ml-2 font-black">照片相片大頭貼版 📸</span>
+        </h1>
+        <p class="text-xs text-[#0C3B17] font-black mt-0.5">🍎 低年級觸控專用放大熱區 • 支援學生真實照片上傳與名牌展示</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 flex-wrap">
+      <!-- 7秒誤觸快速復原鈕 -->
+      <button id="undo-star-btn" onclick="undoAddStar()" class="hidden bg-amber-100 hover:bg-amber-200 text-amber-900 border-2 border-amber-400 px-3.5 py-2 rounded-2xl text-xs font-black flex items-center gap-1 shadow-sm animate-bounce">
+        <span>↩️ 撤回剛才加星 (<span id="undo-timer">7</span>s)</span>
+      </button>
+
+      <!-- 快捷新增學生按鈕 -->
+      <button onclick="openAddStudentModal()" class="bg-gradient-to-b from-emerald-500 to-emerald-700 hover:brightness-105 active:scale-95 text-white border-2 border-emerald-800 px-3.5 py-2 rounded-2xl text-xs md:text-sm font-black flex items-center gap-1 shadow-sm transition">
+        <span>➕ 新增隊員</span>
+      </button>
+
+      <!-- 學生名冊與照片管理專區按鈕 -->
+      <button onclick="openPhotoManagerModal()" class="game-wood-btn px-4 py-2 font-black text-xs md:text-sm flex items-center gap-1">
+        <span>👥 隊員管理</span>
+      </button>
+
+      <!-- 森林禮物小舖 -->
+      <button onclick="openGiftShop()" class="game-gold-btn px-4 py-2 font-black text-xs md:text-sm flex items-center gap-1">
+        <span>🎁 森林禮物小舖</span>
+      </button>
+
+      <!-- 雲端備份 -->
+      <button onclick="toggleCloudSyncModal()" class="game-wood-btn px-4 py-2 font-black text-xs md:text-sm">
+        <span>☁️ 雲端備份</span>
+      </button>
+
+      <!-- 期末進步報告 -->
+      <button onclick="openTermReportModal()" class="game-wood-btn px-4 py-2 font-black text-xs md:text-sm">
+        <span>📈 期末進步報告</span>
+      </button>
+
+      <!-- 教師關懷筆記 -->
+      <button onclick="toggleTeacherDrawer()" class="game-wood-btn px-4 py-2 font-black text-xs md:text-sm relative">
+        <span>📋 關懷筆記</span>
+        <span id="care-count-badge" class="hidden bg-rose-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-black border border-white">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主要視線核心：置頂超寬闊手繪大樹葉面灌溉舞台 -->
+  <section class="w-full max-w-7xl mx-auto mb-4">
+    <div class="tree-large-stage p-3 md:p-4">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2 border-b-2 border-emerald-100">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🌳</span>
+          <div>
+            <h2 class="text-base md:text-lg font-black text-[#0B3A17] flex items-center gap-2">
+              <span>手繪森林共讀魔法大樹</span>
+              <span class="text-xs font-bold text-[#145323] bg-emerald-100/80 px-2.5 py-0.5 rounded-full border border-emerald-300">
+                點擊樹冠枝葉即可聽取隊員心情語音 🔊
+              </span>
+            </h2>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5 bg-[#FFF4E5] border-2 border-amber-300 text-amber-950 font-black px-3.5 py-1 rounded-full text-xs shadow-sm">
+            <span class="text-sm">🍎</span>
+            <span>果實結成：</span>
+            <span id="tree-apple-count" class="text-rose-600 font-black text-sm">0 / 8 顆</span>
+          </div>
+
+          <button onclick="triggerWateringAnimation()" class="bg-gradient-to-b from-sky-400 to-sky-600 hover:brightness-105 active:scale-95 text-white border-2 border-sky-700 px-3.5 py-1 rounded-2xl shadow text-xs font-black flex items-center gap-1.5 transition">
+            <span class="text-base animate-bounce">💧</span>
+            <span>澆灌全樹甘露</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="w-full h-80 md:h-[440px] relative rounded-2xl overflow-hidden border border-emerald-200/80 shadow-inner select-none flex items-center justify-center bg-[#F3FAF5]">
+        <img 
+          id="main-tree-artwork" 
+          src="./Tree.jpg" 
+          alt="手繪樹下共讀奇幻魔法大樹"
+          class="w-full h-full object-cover md:object-contain object-bottom pointer-events-none drop-shadow-sm transition-transform duration-700"
+          onerror="this.style.display='none'; document.getElementById('tree-fallback-svg').style.display='block';"
+        >
+
+        <svg id="tree-fallback-svg" class="w-full h-full hidden pointer-events-none" viewBox="0 0 500 320">
+          <ellipse cx="250" cy="300" rx="200" ry="16" fill="#0C2612" opacity="0.15"/>
+          <path d="M220 300 C225 210 200 160 160 130 C210 140 280 140 330 130 C290 160 275 210 280 300 Z" fill="#6A3B18"/>
+          <circle cx="160" cy="110" r="85" fill="#4CAF50" opacity="0.9"/>
+          <circle cx="340" cy="110" r="85" fill="#4CAF50" opacity="0.9"/>
+          <circle cx="250" cy="80" r="100" fill="#66BB6A"/>
+        </svg>
+
+        <div id="water-droplets-container" class="absolute inset-0 pointer-events-none z-20 flex items-center justify-center"></div>
+        <div id="interactive-apples-stage" class="absolute inset-0 pointer-events-auto z-20"></div>
+      </div>
+
+      <div class="mt-3 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+        <div class="md:col-span-7 bg-white/90 rounded-2xl p-2.5 border border-emerald-200 shadow-sm">
+          <div class="flex items-center justify-between text-xs font-black text-emerald-900 mb-1">
+            <span class="flex items-center gap-1.5">🌱 全班午後集氣灌溉：<span id="watering-status-label" class="text-emerald-700">已灌溉 0 次</span></span>
+            <span id="tree-progress-percent" class="text-emerald-700 font-black">0%</span>
+          </div>
+          <div class="w-full bg-slate-100 h-3.5 rounded-full overflow-hidden p-0.5 border border-slate-200">
+            <div id="tree-progress-fill" class="bg-gradient-to-r from-[#4EBA32] via-[#22C55E] to-[#10B981] h-full rounded-full transition-all duration-700 shadow-sm" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="md:col-span-5 bg-gradient-to-r from-amber-50 to-amber-100/70 rounded-2xl p-2 border-2 border-amber-300 flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-2 pl-1">
+            <span class="text-xl">⭐</span>
+            <div>
+              <div class="text-[11px] font-black text-amber-900">午後任務全員達成率</div>
+              <div id="class-task-summary" class="text-xs font-black text-amber-800">完成 0 / 24 項榮譽印章</div>
+            </div>
+          </div>
+          <button onclick="triggerQuickCompleteWithGuard()" class="text-xs bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-black px-3 py-1.5 rounded-xl shadow border border-amber-700 transition flex items-center gap-1">
+            <span>✨ 一鍵全員蓋章</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 下半部：特攻隊員簽到與學習任務卡片網格 -->
+  <main class="w-full max-w-7xl mx-auto flex-1 mb-2">
+    <section class="game-card-panel p-4 md:p-5">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b-2 border-emerald-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-[#E4F5E9] border-2 border-[#256D39] flex items-center justify-center text-lg font-black text-[#0A3315] shadow-sm">
+            🎒
+          </div>
+          <div>
+            <h2 class="text-lg md:text-xl font-black text-[#06180C] flex items-center">
+              <span class="zhuyin-char"><span class="hanzi">特</span><span class="bpmf-col"><span>ㄊ</span><span>ㄜ</span><span class="tone">ˋ</span></span></span>
+              <span class="zhuyin-char"><span class="hanzi">攻</span><span class="bpmf-col"><span>ㄍ</span><span>ㄨ</span><span>ㄥ</span></span></span>
+              <span class="zhuyin-char"><span class="hanzi">隊</span><span class="bpmf-col"><span>ㄉ</span><span>ㄨ</span><span>ㄟ</span><span class="tone">ˋ</span></span></span>
+              <span class="zhuyin-char"><span class="hanzi">員</span><span class="bpmf-col"><span>ㄩ</span><span>ㄢ</span><span class="tone">ˊ</span></span></span>
+              <span class="zhuyin-char"><span class="hanzi">名</span><span class="bpmf-col"><span>ㄇ</span><span>ㄧ</span><span>ㄥ</span><span class="tone">ˊ</span></span></span>
+              <span class="zhuyin-char"><span class="hanzi">牌</span><span class="bpmf-col"><span>ㄆ</span><span>ㄞ</span><span class="tone">ˊ</span></span></span>
+            </h2>
+            <p class="text-xs text-[#0F401B] font-black">點照片/頭像簽到長出上方魔法蘋果，蓋印章集星星換禮物！</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="openAddStudentModal()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3 py-1.5 rounded-xl border border-emerald-800 flex items-center gap-1 shadow-xs transition active:scale-95">
+            <span>➕ 新增隊員</span>
+          </button>
+          <button onclick="openPhotoManagerModal()" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-black px-3 py-1.5 rounded-xl border border-emerald-400 flex items-center gap-1 shadow-xs transition active:scale-95">
+            <span>👥 名冊與照片管理</span>
+          </button>
+          <div class="flex items-center gap-2 bg-[#EEF8F1] px-3 py-1.5 rounded-2xl border border-[#96D7A9] text-xs font-black text-[#092B12] shadow-sm">
+            <span>午後印章 (+1⭐)：</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span> 共讀</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> 任務</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span> 整潔</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 特攻隊員卡片網格：寬裕排版，大頭貼居左，操作條居右 -->
+      <div id="student-grid" class="grid grid-cols-1 min-[500px]:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 p-1"></div>
+    </section>
+  </main>
+
+  <!-- 學生照片管理專區 Modal -->
+  <div id="photo-manager-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-md z-[65] hidden flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+    <div class="game-card-panel bg-white w-full max-w-4xl p-5 md:p-7 rounded-[36px] border-4 border-[#256D39] shadow-2xl relative max-h-[92vh] flex flex-col">
+      <button onclick="closePhotoManagerModal()" class="absolute -top-3.5 -right-3.5 w-11 h-11 bg-rose-500 hover:bg-rose-600 text-white rounded-full font-black text-2xl flex items-center justify-center border-3 border-white shadow-lg active:scale-95 transition">✕</button>
+
+      <div class="flex items-center justify-between pb-3 border-b-2 border-emerald-100">
+        <div class="flex items-center gap-2.5">
+          <span class="text-3xl">📸</span>
+          <div>
+            <h3 class="text-xl font-black text-[#06180C]">學生名冊與照片管理專區</h3>
+            <p class="text-xs text-[#0F401B] font-black">可為個別學童上傳相片、切換森林代表動物，或自名冊中移除隊員</p>
+          </div>
+        </div>
+        <button onclick="openAddStudentModal()" class="bg-gradient-to-b from-emerald-500 to-emerald-700 hover:brightness-105 active:scale-95 text-white border-2 border-emerald-800 px-4 py-2 rounded-2xl text-xs font-black flex items-center gap-1.5 shadow-sm transition">
+          <span>➕ 新增隊員</span>
+        </button>
+      </div>
+
+      <div class="my-3 bg-emerald-50 rounded-2xl p-3 text-xs text-emerald-900 font-bold border border-emerald-200">
+        💡 <strong>貼心叮嚀：</strong>上傳的照片會自動壓縮並儲存在瀏覽器中；若要增減全班人數，可隨時點擊「新增隊員」或於各卡片下方點擊「移除隊員」。
+      </div>
+
+      <div id="photo-manager-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5 overflow-y-auto flex-1 p-1 scrollbar-hidden"></div>
+
+      <div class="pt-3 border-t border-slate-200 flex justify-end">
+        <button onclick="closePhotoManagerModal()" class="game-wood-btn px-6 py-2 text-xs font-black shadow-xs">完成並返回學堂</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增特攻隊員 Modal -->
+  <div id="add-student-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-md z-[75] hidden flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+    <div class="game-card-panel bg-white w-full max-w-md p-6 rounded-[36px] border-4 border-[#256D39] shadow-2xl relative">
+      <button onclick="closeAddStudentModal()" class="absolute -top-3.5 -right-3.5 w-11 h-11 bg-rose-500 hover:bg-rose-600 text-white rounded-full font-black text-2xl flex items-center justify-center border-3 border-white shadow-lg active:scale-95 transition">✕</button>
+
+      <div class="flex items-center gap-2.5 pb-3 border-b-2 border-emerald-100 mb-4">
+        <span class="text-3xl">🎒</span>
+        <div>
+          <h3 class="text-xl font-black text-[#06180C]">新增特攻隊員</h3>
+          <p class="text-xs text-[#0F401B] font-black">填入姓名與代表動物，立即加入森林大樹隊伍！</p>
+        </div>
+      </div>
+
+      <form onsubmit="submitNewStudent(event)" class="space-y-3.5">
+        <div class="grid grid-cols-3 gap-2.5">
+          <div>
+            <label class="block text-xs font-black text-emerald-950 mb-1">姓氏 (1字)：</label>
+            <input type="text" id="new-student-surname" maxlength="2" placeholder="王" required class="w-full px-3 py-2 text-sm rounded-xl border-2 border-emerald-300 font-black text-center focus:border-emerald-600 outline-none">
+          </div>
+          <div class="col-span-2">
+            <label class="block text-xs font-black text-emerald-950 mb-1">名字 (1~2字)：</label>
+            <input type="text" id="new-student-name" maxlength="4" placeholder="小明" required class="w-full px-3 py-2 text-sm rounded-xl border-2 border-emerald-300 font-black focus:border-emerald-600 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-black text-emerald-950 mb-1">森林代表動物：</label>
+          <select id="new-student-animal" class="w-full px-3 py-2 text-xs rounded-xl border-2 border-emerald-300 font-black bg-emerald-50/50 outline-none focus:border-emerald-600">
+            <option value="bear">🐻 溫暖小熊 (Bear)</option>
+            <option value="rabbit">🐰 活潑小兔 (Rabbit)</option>
+            <option value="fox">🦊 機智小狐 (Fox)</option>
+            <option value="cat">🐱 靈巧貓咪 (Cat)</option>
+            <option value="panda">🐼 憨厚熊貓 (Panda)</option>
+            <option value="deer">🦌 溫柔梅花鹿 (Deer)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-black text-emerald-950 mb-1">自訂真實照片 (可選)：</label>
+          <input type="file" id="new-student-photo" accept="image/*" class="w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-emerald-100 file:text-emerald-900 hover:file:bg-emerald-200">
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="closeAddStudentModal()" class="flex-1 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs transition">取消</button>
+          <button type="submit" class="flex-1 game-wood-btn py-2.5 text-xs font-black shadow-xs">確認加入名冊</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 星星校正微調視窗 -->
+  <div id="star-correction-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[65] hidden flex items-center justify-center p-4">
+    <div class="game-card-panel bg-white w-full max-w-sm p-6 rounded-[32px] text-center shadow-2xl border-4 border-amber-400">
+      <div class="text-4xl mb-1">⭐</div>
+      <h4 class="text-xl font-black text-slate-800 mb-1">星星數量校正</h4>
+      <p class="text-xs text-slate-500 font-bold mb-5"><span id="correction-student-name">學生</span> 目前擁有 <span id="correction-star-count" class="text-amber-600 font-black text-lg">0</span> 顆星星</p>
+      
+      <div class="flex items-center justify-center gap-5 mb-6">
+        <button onclick="adjustStarCount(-1)" class="w-14 h-14 bg-rose-100 hover:bg-rose-200 active:scale-90 text-rose-800 font-black text-2xl rounded-2xl border-2 border-rose-300 shadow-sm transition">-1</button>
+        <button onclick="adjustStarCount(1)" class="w-14 h-14 bg-emerald-100 hover:bg-emerald-200 active:scale-90 text-emerald-800 font-black text-2xl rounded-2xl border-2 border-emerald-300 shadow-sm transition">+1</button>
+      </div>
+
+      <button onclick="closeStarCorrectionModal()" class="w-full py-3 rounded-xl game-wood-btn text-xs font-black shadow-xs">完成校正</button>
+    </div>
+  </div>
+
+  <!-- SEL 心情簽到彈窗 -->
+  <div id="mood-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+    <div id="mood-modal-card" class="game-card-panel bg-gradient-to-b from-[#FFFFFF] via-[#FAFDFB] to-[#F1F9F3] w-full max-w-5xl p-5 md:p-8 rounded-[40px] border-4 border-[#1E5C2D] relative transform transition-all scale-95 opacity-0 my-auto shadow-2xl">
+      <button onclick="closeMoodModal()" class="absolute -top-3.5 -right-3.5 w-11 h-11 bg-rose-500 hover:bg-rose-600 text-white rounded-full font-black text-2xl flex items-center justify-center border-3 border-white shadow-lg active:scale-95 transition">✕</button>
+
+      <div class="text-center mb-5">
+        <div id="modal-student-avatar-box" class="w-28 h-28 md:w-36 md:h-36 mx-auto mb-2 filter drop-shadow-md overflow-hidden rounded-3xl border-3 border-emerald-600"></div>
+        <h3 class="text-2xl md:text-3xl font-black text-[#06180C] flex items-center justify-center gap-2">
+          <span id="modal-student-name" class="text-[#1A6430] underline decoration-[#88D09E] decoration-4 underline-offset-4">同學</span>
+          <span>午安！摸摸心口好感覺 🌱</span>
+        </h3>
+        <p class="text-xs md:text-sm text-[#0C3818] font-black mt-1.5 flex items-center justify-center gap-2">
+          <span>🍎 看大圖、拼注音，今天下午你的心情小精靈是哪一位呢？</span>
+          <button onclick="spellCurrentSelectedMood()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full text-xs font-black shadow-xs flex items-center gap-1">
+            <span>🔊 聽發音拼讀</span>
+          </button>
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3.5 md:gap-4 mb-5">
+        <!-- 1. 開心 -->
+        <button onclick="selectMood('happy')" class="mood-spell-card p-3 md:p-4 border-[#F59E0B] bg-gradient-to-b from-[#FFFDF2] via-[#FFF9E6] to-[#FEDE98] flex flex-col items-center justify-between gap-2.5 group" style="box-shadow: 0 6px 0 #B45309;">
+          <div class="w-20 h-20 md:w-24 md:h-24 pencil-shading-box p-1.5 group-hover:scale-108 transition-transform duration-300 flex items-center justify-center">
+            <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+              <defs>
+                <radialGradient id="sunFaceNew" cx="35%" cy="35%" r="65%">
+                  <stop offset="0%" stop-color="#FFFDE7"/>
+                  <stop offset="55%" stop-color="#FFD54F"/>
+                  <stop offset="100%" stop-color="#FFA000"/>
+                </radialGradient>
+              </defs>
+              <g fill="#FFA726" stroke="#E65100" stroke-width="1.8" stroke-linejoin="round" opacity="0.9">
+                <circle cx="50" cy="14" r="7"/>
+                <circle cx="75" cy="24" r="7"/>
+                <circle cx="86" cy="50" r="7"/>
+                <circle cx="75" cy="76" r="7"/>
+                <circle cx="50" cy="86" r="7"/>
+                <circle cx="25" cy="76" r="7"/>
+                <circle cx="14" cy="50" r="7"/>
+                <circle cx="25" cy="24" r="7"/>
+              </g>
+              <circle cx="50" cy="50" r="32" fill="url(#sunFaceNew)" stroke="#B45309" stroke-width="2.6"/>
+              <path d="M34 44 Q40 37 46 44" stroke="#5D2800" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+              <path d="M54 44 Q60 37 66 44" stroke="#5D2800" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+              <path d="M38 52 Q50 68 62 52 Z" fill="#D84315" stroke="#4E1D00" stroke-width="2.2"/>
+              <path d="M44 58 Q50 64 56 58" fill="#FF8A80"/>
+              <circle cx="29" cy="53" r="5" fill="#FF5252" opacity="0.6"/>
+              <circle cx="71" cy="53" r="5" fill="#FF5252" opacity="0.6"/>
+            </svg>
+          </div>
+          <div class="flex items-center justify-center w-full bg-white/85 py-2 px-1 rounded-2xl border-2 border-amber-300 shadow-xs">
+            <div class="mood-spell-unit text-amber-950">
+              <span class="hanzi">開</span>
+              <span class="bpmf-col text-amber-900"><span>ㄎ</span><span>ㄞ</span></span>
+            </div>
+            <div class="mood-spell-unit text-amber-950">
+              <span class="hanzi">心</span>
+              <span class="bpmf-col text-amber-900"><span>ㄒ</span><span>ㄧ</span><span>ㄣ</span></span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 2. 平靜 -->
+        <button onclick="selectMood('calm')" class="mood-spell-card p-3 md:p-4 border-[#2E8544] bg-gradient-to-b from-[#F3FDF5] via-[#E6F8EA] to-[#C7EDCE] flex flex-col items-center justify-between gap-2.5 group" style="box-shadow: 0 6px 0 #185228;">
+          <div class="w-20 h-20 md:w-24 md:h-24 pencil-shading-box p-1.5 group-hover:scale-108 transition-transform duration-300 flex items-center justify-center">
+            <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+              <defs>
+                <radialGradient id="leafFaceNew" cx="35%" cy="35%" r="65%">
+                  <stop offset="0%" stop-color="#E8F8EA"/>
+                  <stop offset="55%" stop-color="#A5E2A8"/>
+                  <stop offset="100%" stop-color="#66BB6A"/>
+                </radialGradient>
+              </defs>
+              <path d="M50 28 Q44 12 33 18 Q41 29 48 31" fill="#4CAF50" stroke="#164E22" stroke-width="2.2"/>
+              <path d="M50 28 Q58 10 67 16 Q60 29 52 31" fill="#81C784" stroke="#164E22" stroke-width="2.2"/>
+              <circle cx="50" cy="54" r="30" fill="url(#leafFaceNew)" stroke="#164E22" stroke-width="2.6"/>
+              <path d="M37 51 Q42 47 46 51" stroke="#0E3814" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+              <path d="M54 51 Q58 47 63 51" stroke="#0E3814" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+              <path d="M44 61 Q50 66 56 61" stroke="#0E3814" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <circle cx="33" cy="57" r="4.5" fill="#81C784" opacity="0.7"/>
+              <circle cx="67" cy="57" r="4.5" fill="#81C784" opacity="0.7"/>
+            </svg>
+          </div>
+          <div class="flex items-center justify-center w-full bg-white/85 py-2 px-1 rounded-2xl border-2 border-emerald-300 shadow-xs">
+            <div class="mood-spell-unit text-emerald-950">
+              <span class="hanzi">平</span>
+              <span class="bpmf-col text-emerald-900"><span>ㄆ</span><span>ㄧ</span><span>ㄥ</span><span class="tone">ˊ</span></span>
+            </div>
+            <div class="mood-spell-unit text-emerald-950">
+              <span class="hanzi">靜</span>
+              <span class="bpmf-col text-emerald-900"><span>ㄐ</span><span>ㄧ</span><span>ㄥ</span><span class="tone">ˋ</span></span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 3. 累了 -->
+        <button onclick="selectMood('tired')" class="mood-spell-card p-3 md:p-4 border-[#64748B] bg-gradient-to-b from-[#F8FAFC] via-[#EEF4F8] to-[#D6E2EC] flex flex-col items-center justify-between gap-2.5 group" style="box-shadow: 0 6px 0 #334155;">
+          <div class="w-20 h-20 md:w-24 md:h-24 pencil-shading-box p-1.5 group-hover:scale-108 transition-transform duration-300 flex items-center justify-center">
+            <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+              <path d="M42 34 Q34 10 18 22 Q32 30 40 38 Z" fill="#93C5FD" stroke="#1E3A8A" stroke-width="2.2"/>
+              <circle cx="16" cy="22" r="5" fill="#FDE047" stroke="#CA8A04" stroke-width="1.8"/>
+              <path d="M26 68 C18 68 14 58 18 50 C14 42 22 34 30 36 C36 26 50 26 56 34 C64 28 76 32 78 42 C86 44 88 56 82 64 C86 72 76 78 68 76 C62 82 46 82 38 76 C32 80 24 76 26 68 Z" fill="#F1F5F9" stroke="#334155" stroke-width="2.6"/>
+              <path d="M36 53 Q40 57 44 53" stroke="#334155" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <path d="M56 53 Q60 57 64 53" stroke="#334155" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <ellipse cx="50" cy="62" rx="4.5" ry="5.5" fill="#64748B"/>
+              <circle cx="32" cy="58" r="4" fill="#FDA4AF" opacity="0.8"/>
+              <circle cx="68" cy="58" r="4" fill="#FDA4AF" opacity="0.8"/>
+            </svg>
+          </div>
+          <div class="flex items-center justify-center w-full bg-white/85 py-2 px-1 rounded-2xl border-2 border-slate-300 shadow-xs">
+            <div class="mood-spell-unit text-slate-900">
+              <span class="hanzi">累</span>
+              <span class="bpmf-col text-slate-800"><span>ㄌ</span><span>ㄟ</span><span class="tone">ˋ</span></span>
+            </div>
+            <div class="mood-spell-unit text-slate-900">
+              <span class="hanzi">了</span>
+              <span class="bpmf-col text-slate-800"><span class="light-tone">˙</span><span>ㄌ</span><span>ㄜ</span></span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 4. 難過 -->
+        <button onclick="selectMood('sad')" class="mood-spell-card p-3 md:p-4 border-[#0284C7] bg-gradient-to-b from-[#F0F9FF] via-[#E0F2FE] to-[#BAE6FD] flex flex-col items-center justify-between gap-2.5 group" style="box-shadow: 0 6px 0 #0369A1;">
+          <div class="w-20 h-20 md:w-24 md:h-24 pencil-shading-box p-1.5 group-hover:scale-108 transition-transform duration-300 flex items-center justify-center">
+            <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+              <defs>
+                <radialGradient id="rainFaceNew" cx="40%" cy="40%" r="65%">
+                  <stop offset="0%" stop-color="#E0F2FE"/>
+                  <stop offset="60%" stop-color="#7DD3FC"/>
+                  <stop offset="100%" stop-color="#0284C7"/>
+                </radialGradient>
+              </defs>
+              <path d="M22 28 Q50 14 78 28 Q50 34 22 28 Z" fill="#86EFAC" stroke="#166534" stroke-width="2"/>
+              <path d="M50 28 L50 38" stroke="#166534" stroke-width="2" stroke-linecap="round"/>
+              <path d="M50 30 C34 46 28 62 32 74 C36 84 64 84 68 74 C72 62 66 46 50 30 Z" fill="url(#rainFaceNew)" stroke="#075985" stroke-width="2.6"/>
+              <ellipse cx="43" cy="56" rx="4.5" ry="6" fill="#082F49"/>
+              <circle cx="41.5" cy="53.5" r="2.2" fill="#FFFFFF"/>
+              <ellipse cx="57" cy="56" rx="4.5" ry="6" fill="#082F49"/>
+              <circle cx="55.5" cy="53.5" r="2.2" fill="#FFFFFF"/>
+              <path d="M45 68 Q50 63 55 68" stroke="#0C4A6E" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+              <circle cx="35" cy="63" r="4.5" fill="#38BDF8" opacity="0.6"/>
+              <circle cx="65" cy="63" r="4.5" fill="#38BDF8" opacity="0.6"/>
+            </svg>
+          </div>
+          <div class="flex items-center justify-center w-full bg-white/85 py-2 px-1 rounded-2xl border-2 border-sky-300 shadow-xs">
+            <div class="mood-spell-unit text-sky-950">
+              <span class="hanzi">難</span>
+              <span class="bpmf-col text-sky-900"><span>ㄋ</span><span>ㄢ</span><span class="tone">ˊ</span></span>
+            </div>
+            <div class="mood-spell-unit text-sky-950">
+              <span class="hanzi">過</span>
+              <span class="bpmf-col text-sky-900"><span>ㄍ</span><span>ㄨ</span><span>ㄛ</span><span class="tone">ˋ</span></span>
+            </div>
+          </div>
+        </button>
+
+        <!-- 5. 生氣 -->
+        <button onclick="selectMood('angry')" class="mood-spell-card p-3 md:p-4 border-[#E11D48] bg-gradient-to-b from-[#FFF1F2] via-[#FFE4E6] to-[#FECDD3] flex flex-col items-center justify-between gap-2.5 group" style="box-shadow: 0 6px 0 #9F1239;">
+          <div class="w-20 h-20 md:w-24 md:h-24 pencil-shading-box p-1.5 group-hover:scale-108 transition-transform duration-300 flex items-center justify-center">
+            <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+              <defs>
+                <radialGradient id="fireFaceNew" cx="40%" cy="40%" r="65%">
+                  <stop offset="0%" stop-color="#FFE4E6"/>
+                  <stop offset="55%" stop-color="#FB7185"/>
+                  <stop offset="100%" stop-color="#E11D48"/>
+                </radialGradient>
+              </defs>
+              <path d="M47 18 C47 12 55 12 55 18 C55 24 47 28 47 32" stroke="#FDA4AF" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <path d="M50 26 C36 26 26 44 26 58 C26 74 38 82 50 82 C62 82 74 74 74 58 C74 44 64 26 50 26 Z" fill="url(#fireFaceNew)" stroke="#881337" stroke-width="2.6"/>
+              <path d="M34 46 L44 51" stroke="#4C0519" stroke-width="3.5" stroke-linecap="round"/>
+              <path d="M66 46 L56 51" stroke="#4C0519" stroke-width="3.5" stroke-linecap="round"/>
+              <circle cx="40" cy="55" r="4.5" fill="#4C0519"/>
+              <circle cx="38.5" cy="53" r="1.6" fill="#FFFFFF"/>
+              <circle cx="60" cy="55" r="4.5" fill="#4C0519"/>
+              <circle cx="58.5" cy="53" r="1.6" fill="#FFFFFF"/>
+              <circle cx="50" cy="66" r="4.2" fill="#881337"/>
+              <circle cx="30" cy="62" r="5" fill="#BE123C" opacity="0.5"/>
+              <circle cx="70" cy="62" r="5" fill="#BE123C" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="flex items-center justify-center w-full bg-white/85 py-2 px-1 rounded-2xl border-2 border-rose-300 shadow-xs">
+            <div class="mood-spell-unit text-rose-950">
+              <span class="hanzi">生</span>
+              <span class="bpmf-col text-rose-900"><span>ㄕ</span><span>ㄥ</span></span>
+            </div>
+            <div class="mood-spell-unit text-rose-950">
+              <span class="hanzi">氣</span>
+              <span class="bpmf-col text-rose-900"><span>ㄑ</span><span>ㄧ</span><span class="tone">ˋ</span></span>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <div class="bg-[#EEF8F1] rounded-2xl p-3.5 border-2 border-[#8ED4A3] text-center text-xs md:text-sm font-black text-[#0A3816] shadow-xs flex items-center justify-center gap-2">
+        <span class="text-xl">🍎</span>
+        <span>手動點選喜歡的精靈，上方手繪大樹就會為你結出專屬的魔法蘋果！每一種心情都是勇敢又寶貴的喔！</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 森林禮物小舖彈窗 -->
+  <div id="gift-shop-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+    <div class="game-card-panel bg-gradient-to-b from-[#FFFDF9] via-[#FFFFFF] to-[#FFF9EE] w-full max-w-5xl p-5 md:p-8 rounded-[40px] max-h-[92vh] flex flex-col border-4 border-amber-400 shadow-2xl relative my-auto">
+      <div class="flex flex-wrap items-center justify-between pb-3.5 border-b-2 border-amber-200 gap-2">
+        <div class="flex items-center gap-3">
+          <span class="text-4xl filter drop-shadow-sm">🎁</span>
+          <div>
+            <h3 class="text-2xl md:text-3xl font-black text-[#2B1704] flex items-center">
+              <span class="zhuyin-char"><span class="hanzi">森</span><span class="bpmf-col"><span>ㄙ</span><span>ㄣ</span></span></span>
+              <span class="zhuyin-char"><span class="hanzi">林</span><span class="bpmf-col"><span>ㄌ</span><span>ㄧ</span><span>ㄣ</span><span class="tone">ˊ</span></span></span>
+              <span class="zhuyin-char"><span class="hanzi">禮</span><span class="bpmf-col"><span>ㄌ</span><span>ㄧ</span><span class="tone">ˇ</span></span></span>
+              <span class="zhuyin-char"><span class="hanzi">物</span><span class="bpmf-col"><span>ㄨ</span><span class="tone">ˋ</span></span></span>
+              <span class="zhuyin-char"><span class="hanzi">小</span><span class="bpmf-col"><span>ㄒ</span><span>ㄧ</span><span>ㄠ</span><span class="tone">ˇ</span></span></span>
+              <span class="zhuyin-char"><span class="hanzi">舖</span><span class="bpmf-col"><span>ㄆ</span><span>ㄨ</span><span class="tone">ˋ</span></span></span>
+            </h3>
+            <p class="text-xs md:text-sm text-amber-900 font-black mt-1 flex items-center gap-1.5">
+              <span>🌟 看大字、拼注音，累積午後好努力，自己挑選喜歡的榮譽特權！</span>
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="shop-edit-mode-toggle" onclick="toggleShopEditMode()" class="px-3.5 py-2 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-950 border-2 border-amber-300 text-xs md:text-sm font-black transition active:scale-95 flex items-center gap-1.5 shadow-xs">
+            <span>⚙️ 老師編輯禮品</span>
+          </button>
+          <button onclick="closeGiftShop()" class="w-11 h-11 bg-rose-500 hover:bg-rose-600 text-white rounded-full font-black text-2xl flex items-center justify-center border-3 border-white shadow-lg active:scale-95 transition ml-1">✕</button>
+        </div>
+      </div>
+
+      <!-- 學生切換與存摺列 -->
+      <div id="shop-student-bar" class="my-3 p-3.5 bg-gradient-to-r from-amber-50 via-amber-100/70 to-amber-50 rounded-2xl border-2 border-amber-300 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+        <div class="flex items-center gap-2.5 text-sm md:text-base font-black text-amber-950">
+          <label class="flex items-center gap-1">🎒 <span>兌換隊員：</span></label>
+          <select id="shop-student-select" onchange="updateShopDisplay()" class="px-3.5 py-1.5 rounded-xl border-2 border-amber-400 text-sm md:text-base font-black bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500"></select>
+        </div>
+        <div class="flex items-center gap-2 text-sm md:text-base font-black text-amber-950 bg-white/90 px-4 py-1.5 rounded-xl border border-amber-300 shadow-xs">
+          <span>目前星星存摺：</span>
+          <span id="shop-student-stars" class="text-xl md:text-2xl font-black text-amber-600">0</span>
+          <span class="text-lg">⭐</span>
+        </div>
+      </div>
+
+      <!-- 老師編輯模式提示與新增操作列 -->
+      <div id="shop-teacher-edit-bar" class="hidden my-3 p-3 bg-emerald-50 rounded-2xl border-2 border-emerald-300 flex flex-wrap items-center justify-between gap-2 shadow-xs">
+        <div class="text-xs md:text-sm font-black text-emerald-950 flex items-center gap-1.5">
+          <span>🛠️ <strong>小舖管理模式：</strong>可自由新增、修改或刪除禮品</span>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="openEditShopItemModal()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs md:text-sm rounded-xl shadow transition flex items-center gap-1">
+            <span>➕ 新增禮品</span>
+          </button>
+          <button onclick="resetDefaultShopItemsConfirm()" class="px-3 py-1.5 bg-white hover:bg-slate-100 active:scale-95 text-slate-700 border border-slate-300 font-black text-xs md:text-sm rounded-xl transition">
+            恢復預設禮品
+          </button>
+        </div>
+      </div>
+
+      <!-- 大卡片網格展示區 -->
+      <div id="shop-items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 overflow-y-auto pr-1 flex-1 max-h-[58vh] p-1 scrollbar-hidden"></div>
+
+      <div class="pt-3.5 border-t border-amber-200 flex items-center justify-between">
+        <div class="text-xs font-black text-amber-800 hidden sm:block">
+          💡 點擊禮品卡上的「🔊 聽發音」按鈕，可以跟著語音一起拼讀禮品名稱喔！
+        </div>
+        <button onclick="closeGiftShop()" class="game-wood-btn px-6 py-2.5 font-black text-xs md:text-sm shadow-xs">返回特攻隊</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增/編輯禮品彈窗 -->
+  <div id="edit-shop-item-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-md z-[70] hidden flex items-center justify-center p-4">
+    <div class="game-card-panel bg-white w-full max-w-sm p-5 rounded-[32px] border-4 border-amber-400 shadow-2xl relative">
+      <button onclick="closeEditShopItemModal()" class="absolute -top-3 -right-3 w-10 h-10 bg-rose-500 hover:bg-rose-600 text-white rounded-full font-black text-xl flex items-center justify-center border-2 border-white shadow active:scale-95 transition">✕</button>
+
+      <div class="flex items-center gap-2 pb-2.5 border-b border-amber-200 mb-3">
+        <span class="text-2xl">🎁</span>
+        <div>
+          <h4 id="edit-shop-item-title" class="text-base font-black text-slate-800">編輯榮譽禮品</h4>
+          <p class="text-[11px] font-bold text-amber-800">自訂兌換所需星星與獎勵內容</p>
+        </div>
+      </div>
+
+      <form onsubmit="submitShopItemForm(event)" class="space-y-3">
+        <input type="hidden" id="edit-shop-item-id">
+        <div class="grid grid-cols-4 gap-2">
+          <div class="col-span-1">
+            <label class="block text-[11px] font-black text-slate-700 mb-1">圖示</label>
+            <input type="text" id="edit-shop-item-icon" maxlength="4" placeholder="✨" required class="w-full px-2 py-1.5 text-center text-base rounded-xl border-2 border-amber-300 font-black outline-none focus:border-amber-500">
+          </div>
+          <div class="col-span-3">
+            <label class="block text-[11px] font-black text-slate-700 mb-1">禮品名稱</label>
+            <input type="text" id="edit-shop-item-name" maxlength="15" placeholder="例如：特攻隊貼紙一張" required class="w-full px-3 py-1.5 text-xs rounded-xl border-2 border-amber-300 font-black outline-none focus:border-amber-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-black text-slate-700 mb-1">所需星星數 (⭐)：</label>
+          <input type="number" id="edit-shop-item-cost" min="1" max="99" placeholder="3" required class="w-full px-3 py-1.5 text-xs rounded-xl border-2 border-amber-300 font-black outline-none focus:border-amber-500">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-black text-slate-700 mb-1">禮品獎勵描述：</label>
+          <textarea id="edit-shop-item-desc" rows="2" placeholder="簡短描述兌換內容或特權..." class="w-full p-2 text-xs rounded-xl border-2 border-amber-300 font-bold outline-none resize-none focus:border-amber-500"></textarea>
+        </div>
+
+        <div class="pt-1 flex gap-2">
+          <button type="button" onclick="closeEditShopItemModal()" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs transition">取消</button>
+          <button type="submit" class="flex-1 game-gold-btn py-2 text-xs font-black shadow-xs">儲存禮品</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 雲端備份 Modal -->
+  <div id="cloud-sync-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+    <div class="game-card-panel bg-white w-full max-w-2xl p-6 rounded-[36px] border-4 border-[#256D39] shadow-2xl relative">
+      <button onclick="closeCloudSyncModal()" class="absolute -top-3.5 -right-3.5 w-11 h-11 bg-rose-500 hover:bg-rose-600 text-white rounded-full font-black text-2xl flex items-center justify-center border-3 border-white shadow-lg active:scale-95 transition">✕</button>
+
+      <div class="flex items-center gap-2.5 pb-3 border-b-2 border-emerald-100 mb-4">
+        <span class="text-3xl">☁️</span>
+        <div>
+          <h3 class="text-xl font-black text-[#06180C]">Google 雲端備份與防呆復原</h3>
+          <p class="text-xs text-[#0F401B] font-black">支援 Google Apps Script 雲端試算表自動同步與離線 JSON 檔案防呆備份</p>
+        </div>
+      </div>
+
+      <div class="bg-emerald-50/80 rounded-2xl p-4 border border-emerald-200 mb-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-black text-emerald-950 flex items-center gap-1.5">
+            <span>🔗 Google Apps Script 部署網址 (Web App URL)：</span>
+          </label>
+          <span id="gas-status-badge" class="text-[10px] bg-slate-200 text-slate-700 font-black px-2.5 py-0.5 rounded-full border border-slate-300">尚未設定網址</span>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="gas-url-input" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3 py-2 text-xs rounded-xl border border-emerald-300 bg-white font-mono font-bold focus:ring-2 focus:ring-emerald-500 outline-none">
+          <button onclick="saveGasUrl()" class="game-wood-btn px-4 py-2 text-xs font-black shadow-xs">儲存網址</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+        <div class="p-3.5 rounded-2xl bg-gradient-to-b from-emerald-50 to-emerald-100/60 border-2 border-emerald-300 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="font-black text-emerald-950 text-sm flex items-center gap-1.5 mb-1">
+              <span>🌐 雲端 Google 試算表同步</span>
+            </div>
+            <p class="text-[11px] text-emerald-800 font-bold leading-relaxed">一鍵將全班名冊、包含學生照片、每日心情與星星數上傳備份至 Google 試算表。</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="uploadToCloud()" class="flex-1 game-wood-btn py-2 text-xs font-black flex items-center justify-center gap-1 shadow-xs">
+              <span>☁️ 備份上傳</span>
+            </button>
+            <button onclick="restoreFromCloud()" class="flex-1 bg-white hover:bg-emerald-50 text-emerald-900 border-2 border-emerald-600 py-2 rounded-2xl text-xs font-black transition active:scale-95 shadow-xs">
+              <span>🔄 雲端還原</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-gradient-to-b from-amber-50 to-amber-100/60 border-2 border-amber-300 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="font-black text-amber-950 text-sm flex items-center gap-1.5 mb-1">
+              <span>💾 本機防呆檔案備份</span>
+            </div>
+            <p class="text-[11px] text-amber-800 font-bold leading-relaxed">無需網路，下載含照片之 .json 備份檔保存至隨身碟，或由備份檔還原名冊。</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="exportLocalJSON()" class="flex-1 game-gold-btn py-2 text-xs font-black flex items-center justify-center gap-1 shadow-xs">
+              <span>📥 下載備份</span>
+            </button>
+            <button onclick="document.getElementById('json-file-input').click()" class="flex-1 bg-white hover:bg-amber-50 text-amber-950 border-2 border-amber-500 py-2 rounded-2xl text-xs font-black transition active:scale-95 shadow-xs">
+              <span>📤 匯入還原</span>
+            </button>
+            <input type="file" id="json-file-input" accept=".json" class="hidden" onchange="importLocalJSON(event)">
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-200 pt-3">
+        <button onclick="toggleGasCodeViewer()" class="text-xs text-emerald-800 hover:text-emerald-950 font-black flex items-center gap-1 underline underline-offset-2">
+          <span>📜 顯示 / 隱藏 Google Apps Script (GAS) 後端程式碼與部署教學</span>
+        </button>
+
+        <div id="gas-code-box" class="hidden mt-3 p-3 bg-slate-900 text-slate-100 rounded-2xl border border-slate-700 text-xs">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-black text-amber-400">Google Apps Script 完整後端腳本 (Code.gs)：</span>
+            <button onclick="copyGasCode()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3 py-1 rounded-xl text-[11px] shadow-xs active:scale-95 transition">📋 一鍵複製程式碼</button>
+          </div>
+          <pre id="gas-code-textarea" class="w-full h-40 overflow-y-auto font-mono text-[10px] leading-relaxed bg-slate-950 p-2.5 rounded-xl border border-slate-800 select-text scrollbar-hidden">// Google Apps Script (Code.gs) - 快樂森林學堂 SEL 雲端雙向同步腳本
+function doGet(e) {
+  var action = e.parameter.action;
+  if (action === 'fetch') {
+    return handleFetch();
+  }
+  return ContentService.createTextOutput(JSON.stringify({ status: "success", message: "SEL 雲端服務運作中" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  try {
+    var contents = JSON.parse(e.postData.contents);
+    var action = contents.action;
+    
+    if (action === 'upload') {
+      return handleUpload(contents);
+    } else if (action === 'fetch') {
+      return handleFetch();
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "未知的操作指令" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function handleUpload(payload) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetStudents = getOrCreateSheet(ss, "即時隊員名冊");
+  sheetStudents.clear();
+  sheetStudents.appendRow(["學生ID", "姓氏", "名字", "動物頭像", "目前星星", "累積星星", "今日簽到", "心情天氣", "簽到時間", "共讀印章", "任務印章", "整潔印章", "自訂照片", "最後更新"]);
+  
+  if (payload.students && payload.students.length > 0) {
+    payload.students.forEach(function(s) {
+      sheetStudents.appendRow([
+        s.id, s.surname, s.name, s.animalType, s.stars || 0, s.lifetimeStars || 0,
+        s.checkedIn ? "是" : "否", s.mood || "", s.time || "",
+        s.tasks && s.tasks.reading ? "V" : "-",
+        s.tasks && s.tasks.homework ? "V" : "-",
+        s.tasks && s.tasks.tidy ? "V" : "-",
+        s.customAvatar ? "有 (Base64)" : "預設頭像",
+        payload.timestamp || new Date().toISOString()
+      ]);
+    });
+  }
+
+  var sheetSnapshot = getOrCreateSheet(ss, "系統備份快照");
+  sheetSnapshot.clear();
+  sheetSnapshot.appendRow(["快照時間", "JSON備份資料"]);
+  sheetSnapshot.appendRow([payload.timestamp || new Date().toISOString(), JSON.stringify(payload)]);
+
+  return ContentService.createTextOutput(JSON.stringify({ status: "success", message: "雲端備份成功！" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function handleFetch() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetSnapshot = ss.getSheetByName("系統備份快照");
+  
+  if (!sheetSnapshot || sheetSnapshot.getLastRow() < 2) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "雲端尚無備份快照" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  var rawJson = sheetSnapshot.getRange(2, 2).getValue();
+  var backupData = JSON.parse(rawJson);
+
+  return ContentService.createTextOutput(JSON.stringify({ status: "success", data: backupData }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function getOrCreateSheet(ss, name) {
+  var sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+  }
+  return sheet;
+}
+</pre>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button onclick="closeCloudSyncModal()" class="game-wood-btn px-6 py-2 text-xs font-black shadow-xs">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 期末進步報告 Modal -->
+  <div id="term-report-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+    <div class="game-card-panel bg-white w-full max-w-3xl p-6 rounded-[36px] border-4 border-[#256D39] shadow-2xl relative max-h-[92vh] flex flex-col">
+      <button onclick="closeTermReportModal()" class="absolute -top-3.5 -right-3.5 w-11 h-11 bg-rose-500 hover:bg-rose-600 text-white rounded-full font-black text-2xl flex items-center justify-center border-3 border-white shadow-lg active:scale-95 transition">✕</button>
+
+      <div class="flex items-center justify-between pb-3 border-b-2 border-emerald-100">
+        <div class="flex items-center gap-2.5">
+          <span class="text-3xl">📈</span>
+          <div>
+            <h3 class="text-xl font-black text-[#06180C]">期末學扶 SEL & 學習進步評量報告</h3>
+            <p class="text-xs text-[#0F401B] font-black">綜整全班與個別學生出勤天數、任務達成率與 SEL 心情成長動態</p>
+          </div>
+        </div>
+        
+        <select id="report-student-select" onchange="updateTermReportDisplay()" class="px-3 py-1.5 rounded-xl border-2 border-emerald-300 text-xs font-black bg-emerald-50 text-emerald-950 focus:outline-none">
+          <option value="all">全班整體綜合報告</option>
+        </select>
+      </div>
+
+      <div class="my-4 overflow-y-auto flex-1 pr-1 space-y-4 scrollbar-hidden">
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="bg-gradient-to-b from-amber-50 to-amber-100/80 p-3 rounded-2xl border-2 border-amber-300 shadow-xs">
+            <div class="text-[11px] text-amber-900 font-black mb-0.5">簽到與出勤天數</div>
+            <div id="report-attendance-days" class="text-xl font-black text-amber-950">0 天</div>
+          </div>
+          <div class="bg-gradient-to-b from-emerald-50 to-emerald-100/80 p-3 rounded-2xl border-2 border-emerald-300 shadow-xs">
+            <div class="text-[11px] text-emerald-900 font-black mb-0.5">累積獲得星星總數</div>
+            <div id="report-total-stars" class="text-xl font-black text-emerald-950">0 顆</div>
+          </div>
+          <div class="bg-gradient-to-b from-sky-50 to-sky-100/80 p-3 rounded-2xl border-2 border-sky-300 shadow-xs">
+            <div class="text-[11px] text-sky-900 font-black mb-0.5">午後三任務平均達成率</div>
+            <div id="report-avg-task-rate" class="text-xl font-black text-sky-950">0%</div>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200 space-y-2.5">
+          <div class="text-xs font-black text-slate-800 flex items-center justify-between">
+            <span>📚 午後三大學習常規達成概況：</span>
+            <span class="text-[10px] text-slate-500 font-bold">讀本共讀 • 課堂任務 • 桌面整潔</span>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div>
+              <div class="flex justify-between font-black text-emerald-900 mb-1">
+                <span>📖 讀本共讀印章率</span>
+                <span id="report-rate-reading">0%</span>
+              </div>
+              <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                <div id="report-bar-reading" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-black text-amber-900 mb-1">
+                <span>✏️ 課堂任務印章率</span>
+                <span id="report-rate-homework">0%</span>
+              </div>
+              <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                <div id="report-bar-homework" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-black text-sky-900 mb-1">
+                <span>✨ 桌面整潔印章率</span>
+                <span id="report-rate-tidy">0%</span>
+              </div>
+              <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                <div id="report-bar-tidy" class="bg-sky-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-50/70 p-4 rounded-2xl border-2 border-emerald-200">
+          <div class="text-xs font-black text-emerald-950 mb-2">🌱 SEL 午後心情自我覺察分佈圖：</div>
+          <div class="grid grid-cols-5 gap-2 text-center text-xs font-black">
+            <div class="bg-white p-2 rounded-xl border border-amber-300">
+              <div class="text-base mb-0.5">☀️</div>
+              <div class="text-[10px] text-amber-900">開心</div>
+              <div id="mood-count-happy" class="text-sm font-black text-amber-600">0 次</div>
+            </div>
+            <div class="bg-white p-2 rounded-xl border border-emerald-300">
+              <div class="text-base mb-0.5">🌱</div>
+              <div class="text-[10px] text-emerald-900">平靜</div>
+              <div id="mood-count-calm" class="text-sm font-black text-emerald-600">0 次</div>
+            </div>
+            <div class="bg-white p-2 rounded-xl border border-slate-300">
+              <div class="text-base mb-0.5">☁️</div>
+              <div class="text-[10px] text-slate-700">累了</div>
+              <div id="mood-count-tired" class="text-sm font-black text-slate-600">0 次</div>
+            </div>
+            <div class="bg-white p-2 rounded-xl border border-sky-300">
+              <div class="text-base mb-0.5">🌧️</div>
+              <div class="text-[10px] text-sky-900">難過</div>
+              <div id="mood-count-sad" class="text-sm font-black text-sky-600">0 次</div>
+            </div>
+            <div class="bg-white p-2 rounded-xl border border-rose-300">
+              <div class="text-base mb-0.5">⚡</div>
+              <div class="text-[10px] text-rose-900">生氣</div>
+              <div id="mood-count-angry" class="text-sm font-black text-rose-600">0 次</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border-2 border-emerald-300 shadow-xs">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-black text-emerald-950">📝 教育部學扶成果格式質性進步評語：</span>
+            <button onclick="copyReportRemark()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-2.5 py-1 rounded-xl text-xs font-black transition active:scale-95 shadow-xs">
+              📋 一鍵複製質性評語
+            </button>
+          </div>
+          <div id="report-qualitative-text" class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs leading-relaxed text-slate-800 font-bold select-text">
+            正在生成評語資料...
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex gap-2">
+          <button onclick="exportTermCSV()" class="game-gold-btn px-4 py-2 text-xs font-black shadow-xs">
+            📥 匯出進步分析 CSV
+          </button>
+          <button onclick="printTermReport()" class="bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-400 px-4 py-2 rounded-2xl text-xs font-black shadow-xs active:scale-95 transition">
+            🖨️ 列印報告
+          </button>
+        </div>
+        <button onclick="closeTermReportModal()" class="game-wood-btn px-6 py-2 text-xs font-black shadow-xs">
+          關閉
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 教師關懷筆記抽屜 -->
+  <div id="teacher-drawer" class="fixed inset-y-0 right-0 w-full max-w-md bg-white border-l-4 border-[#285E34] shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 flex flex-col p-5 md:p-6">
+    <div class="flex items-center justify-between pb-3.5 border-b-2 border-slate-100">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">📋</span>
+        <h3 class="text-xl font-black text-slate-800">教師 SEL 午後關懷筆記</h3>
+      </div>
+      <button onclick="toggleTeacherDrawer()" class="text-slate-400 hover:text-slate-700 text-2xl font-black">✕</button>
+    </div>
+
+    <div class="bg-emerald-50 rounded-2xl p-3 border border-emerald-200 my-3 text-xs leading-relaxed text-emerald-950 font-bold">
+      <strong>💡 兒童心理學輔導小叮嚀：</strong><br>
+      低年級學扶孩子若呈現「累了」或「生氣」，多源於課後注意力消耗與挫折防衛。先給予溫柔同理，再引導共讀，能顯著提升安適感。
+    </div>
+
+    <div class="my-2">
+      <div class="text-xs font-black text-rose-900 mb-1.5 flex items-center gap-1">
+        <span>🚨 今日優先關懷隊員 (情緒提醒)：</span>
+      </div>
+      <div id="care-student-list" class="space-y-2 max-h-36 overflow-y-auto pr-1 scrollbar-hidden"></div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto space-y-3 my-2 pr-1 scrollbar-hidden">
+      <div class="text-xs font-black text-slate-700">全班隊員個別化關懷備忘錄 (隨填即存)：</div>
+      <div id="all-care-notes-list" class="space-y-2.5"></div>
+    </div>
+
+    <div class="pt-3 border-t border-slate-100 flex gap-2">
+      <button onclick="triggerResetDayWithGuard()" class="flex-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-black py-2.5 rounded-2xl text-xs transition flex items-center justify-center gap-1 shadow-xs active:scale-95">
+        <span>🔒 重置今日簽到 (防呆)</span>
+      </button>
+      <button onclick="toggleTeacherDrawer()" class="flex-1 game-wood-btn py-2.5 text-xs font-black shadow-xs">
+        收合筆記
+      </button>
+    </div>
+  </div>
+
+  <!-- 防呆確認視窗 -->
+  <div id="confirm-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
+    <div class="game-card-panel bg-white w-full max-w-sm p-6 rounded-[32px] text-center border-4 border-amber-400">
+      <div id="confirm-modal-icon" class="text-3xl mb-2">⚠️</div>
+      <h4 id="confirm-modal-title" class="text-lg font-black text-slate-800 mb-1">請確認操作</h4>
+      <p id="confirm-modal-desc" class="text-xs font-bold text-slate-600 mb-5">確定要執行這項操作嗎？</p>
+      <div class="flex gap-3">
+        <button onclick="closeConfirmModal(false)" class="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs">取消</button>
+        <button onclick="closeConfirmModal(true)" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow">確認執行</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 隱藏的全域檔案上傳器 -->
+  <input type="file" id="global-student-photo-input" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
+
+  <!-- 浮動 Toast 提示 -->
+  <div id="toast-container" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] pointer-events-none transition-all duration-300 opacity-0 translate-y-4">
+    <div id="toast-text" class="bg-[#0B2513]/95 text-white font-black px-5 py-2.5 rounded-2xl shadow-xl text-xs md:text-sm border border-emerald-400/30">提示訊息</div>
+  </div>
+
+  <script>
+    /* =========================================================
+       1. 教育部標準直式注音字典 (完整統一整理)
+       ========================================================= */
+    const zhuyinMap = {
+      // 學生姓名字典
+      "蘇": { bpmf: ["ㄙ", "ㄨ"], tone: "" },
+      "思": { bpmf: ["ㄙ"], tone: "" },
+      "羽": { bpmf: ["ㄩ"], tone: "ˇ" },
+      "杜": { bpmf: ["ㄉ", "ㄨ"], tone: "ˋ" },
+      "斐": { bpmf: ["ㄈ", "ㄟ"], tone: "ˇ" },
+      "恩": { bpmf: ["ㄣ"], tone: "" },
+      "林": { bpmf: ["ㄌ", "ㄧ", "ㄣ"], tone: "ˊ" },
+      "宥": { bpmf: ["ㄧ", "ㄡ"], tone: "ˋ" },
+      "璋": { bpmf: ["ㄓ", "ㄤ"], tone: "" },
+      "邱": { bpmf: ["ㄑ", "ㄧ", "ㄡ"], tone: "" },
+      "閎": { bpmf: ["ㄏ", "ㄨ", "ㄥ"], tone: "ˊ" },
+      "陳": { bpmf: ["ㄔ", "ㄣ"], tone: "ˊ" },
+      "心": { bpmf: ["ㄒ", "ㄧ", "ㄣ"], tone: "" },
+      "貝": { bpmf: ["ㄅ", "ㄟ"], tone: "ˋ" },
+      "子": { bpmf: ["ㄗ"], tone: "ˇ" },
+      "晴": { bpmf: ["ㄑ", "ㄧ", "ㄥ"], tone: "ˊ" },
+      "牛": { bpmf: ["ㄋ", "ㄧ", "ㄡ"], tone: "ˊ" },
+      "品": { bpmf: ["ㄆ", "ㄧ", "ㄣ"], tone: "ˇ" },
+      "璇": { bpmf: ["ㄒ", "ㄩ", "ㄢ"], tone: "ˊ" },
+      "李": { bpmf: ["ㄌ", "ㄧ"], tone: "ˇ" },
+      "洋": { bpmf: ["ㄧ", "ㄤ"], tone: "ˊ" },
+      "森": { bpmf: ["ㄙ", "ㄣ"], tone: "" },
+
+      // 心情情緒覺察字典
+      "開": { bpmf: ["ㄎ", "ㄞ"], tone: "" },
+      "平": { bpmf: ["ㄆ", "ㄧ", "ㄥ"], tone: "ˊ" },
+      "靜": { bpmf: ["ㄐ", "ㄧ", "ㄥ"], tone: "ˋ" },
+      "累": { bpmf: ["ㄌ", "ㄟ"], tone: "ˋ" },
+      "了": { bpmf: ["ㄌ", "ㄜ"], tone: "˙" },
+      "難": { bpmf: ["ㄋ", "ㄢ"], tone: "ˊ" },
+      "過": { bpmf: ["ㄍ", "ㄨ", "ㄛ"], tone: "ˋ" },
+      "生": { bpmf: ["ㄕ", "ㄥ"], tone: "" },
+      "氣": { bpmf: ["ㄑ", "ㄧ"], tone: "ˋ" },
+
+      // 最新三大禮品與特攻小舖核心字典
+      "音": { bpmf: ["ㄧ", "ㄣ"], tone: "" },
+      "樂": { bpmf: ["ㄩ", "ㄝ"], tone: "ˋ" },
+      "放": { bpmf: ["ㄈ", "ㄤ"], tone: "ˋ" },
+      "輕": { bpmf: ["ㄑ", "ㄧ", "ㄥ"], tone: "" },
+      "鬆": { bpmf: ["ㄙ", "ㄨ", "ㄥ"], tone: "" },
+      "隊": { bpmf: ["ㄉ", "ㄨ", "ㄟ"], tone: "ˋ" },
+      "長": { bpmf: ["ㄓ", "ㄤ"], tone: "ˇ" },
+
+      "星": { bpmf: ["ㄒ", "ㄧ", "ㄥ"], tone: "" },
+      "首": { bpmf: ["ㄕ", "ㄡ"], tone: "ˇ" },
+      "席": { bpmf: ["ㄒ", "ㄧ"], tone: "ˊ" },
+      "小": { bpmf: ["ㄒ", "ㄧ", "ㄠ"], tone: "ˇ" },
+
+      "特": { bpmf: ["ㄊ", "ㄜ"], tone: "ˋ" },
+      "攻": { bpmf: ["ㄍ", "ㄨ", "ㄥ"], tone: "" },
+      "貼": { bpmf: ["ㄊ", "ㄧ", "ㄝ"], tone: "" },
+      "紙": { bpmf: ["ㄓ"], tone: "ˇ" },
+      "一": { bpmf: ["ㄧ"], tone: "" },
+      "張": { bpmf: ["ㄓ", "ㄤ"], tone: "" },
+
+      // 學堂看板與擴充獎勵文字字典
+      "學": { bpmf: ["ㄒ", "ㄩ", "ㄝ"], tone: "ˊ" },
+      "堂": { bpmf: ["ㄊ", "ㄤ"], tone: "ˊ" },
+      "員": { bpmf: ["ㄩ", "ㄢ"], tone: "ˊ" },
+      "名": { bpmf: ["ㄇ", "ㄧ", "ㄥ"], tone: "ˊ" },
+      "牌": { bpmf: ["ㄆ", "ㄞ"], tone: "ˊ" },
+      "禮": { bpmf: ["ㄌ", "ㄧ"], tone: "ˇ" },
+      "物": { bpmf: ["ㄨ"], tone: "ˋ" },
+      "舖": { bpmf: ["ㄆ", "ㄨ"], tone: "ˋ" },
+      "大": { bpmf: ["ㄉ", "ㄚ"], tone: "ˋ" },
+      "樹": { bpmf: ["ㄕ", "ㄨ"], tone: "ˋ" },
+      "灌": { bpmf: ["ㄍ", "ㄨ", "ㄢ"], tone: "ˋ" },
+      "溉": { bpmf: ["ㄍ", "ㄞ"], tone: "ˋ" },
+      "官": { bpmf: ["ㄍ", "ㄨ", "ㄢ"], tone: "" },
+      "勇": { bpmf: ["ㄩ", "ㄥ"], tone: "ˇ" },
+      "者": { bpmf: ["ㄓ", "ㄜ"], tone: "ˇ" },
+      "加": { bpmf: ["ㄐ", "ㄧ", "ㄚ"], tone: "" },
+      "持": { bpmf: ["ㄔ"], tone: "ˊ" },
+      "擊": { bpmf: ["ㄐ", "ㄧ"], tone: "ˊ" },
+      "掌": { bpmf: ["ㄓ", "ㄤ"], tone: "ˇ" },
+      "炫": { bpmf: ["ㄒ", "ㄩ", "ㄢ"], tone: "ˋ" },
+      "彩": { bpmf: ["ㄘ", "ㄞ"], tone: "ˇ" },
+      "午": { bpmf: ["ㄨ"], tone: "ˇ" },
+      "後": { bpmf: ["ㄏ", "ㄡ"], tone: "ˋ" },
+      "卡": { bpmf: ["ㄎ", "ㄚ"], tone: "ˇ" },
+      "片": { bpmf: ["ㄆ", "ㄧ", "ㄢ"], tone: "ˋ" },
+      "書": { bpmf: ["ㄕ", "ㄨ"], tone: "" },
+      "鉛": { bpmf: ["ㄑ", "ㄧ", "ㄢ"], tone: "" },
+      "筆": { bpmf: ["ㄅ", "ㄧ"], tone: "ˇ" },
+      "好": { bpmf: ["ㄏ", "ㄠ"], tone: "ˇ" },
+      "朋": { bpmf: ["ㄆ", "ㄥ"], tone: "ˊ" },
+      "友": { bpmf: ["ㄧ", "ㄡ"], tone: "ˇ" }
+    };
+
+    function getZhuyin(char) {
+      if (zhuyinMap[char]) return JSON.parse(JSON.stringify(zhuyinMap[char]));
+      return { bpmf: [char], tone: "" };
+    }
+
+    function buildZhuyinForName(fullName) {
+      const list = [];
+      for (let i = 0; i < fullName.length; i++) {
+        const ch = fullName[i];
+        let data = getZhuyin(ch);
+        // 疊字輕聲輔助判斷
+        if (i > 0 && ch === fullName[i - 1] && (ch === "星" || ch === "朋")) {
+          data.tone = "˙";
+        }
+        list.push({ char: ch, ...data });
+      }
+      return list;
+    }
+
+    /* 將字串組裝為教育部標準直式注音大字 HTML（完整支援疊字輕聲 ˙ㄒㄧㄥ） */
+    function renderZhuyinSpellText(text, colorClass = "text-amber-950") {
+      let html = "";
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (ch === " " || ch === "・" || ch === "-" || ch === "—") {
+          html += `<span class="mx-1 text-slate-300 font-black">・</span>`;
+          continue;
+        }
+
+        let data = getZhuyin(ch);
+
+        // 依據教育部辭典標準：疊字第二字讀輕聲（例如：「星星」第二個「星」讀 ˙ㄒㄧㄥ）
+        if (ch === "星" && i > 0 && text[i - 1] === "星") {
+          data = { bpmf: ["ㄒ", "ㄧ", "ㄥ"], tone: "˙" };
+        } else if (i > 0 && ch === text[i - 1] && (ch === "朋" || ch === "了")) {
+          data.tone = "˙";
+        }
+
+        const isLightTone = data.tone === "˙";
+        html += `
+          <div class="shop-spell-unit ${colorClass}">
+            <span class="hanzi">${ch}</span>
+            <span class="bpmf-col">
+              ${isLightTone ? `<span class="light-tone">˙</span>` : ''}
+              ${data.bpmf.map(b => `<span>${b}</span>`).join('')}
+              ${data.tone && !isLightTone ? `<span class="tone">${data.tone}</span>` : ''}
+            </span>
+          </div>
+        `;
+      }
+      return html;
+    }
+
+    /* =========================================================
+       2. 資料模型與預設特攻隊員名冊
+       ========================================================= */
+    const initial8Students = [
+      { id: 1, surname: "蘇", name: "思羽", animalType: "bear", customAvatar: null, stars: 0, lifetimeStars: 0, checkedIn: false, mood: null, time: null, tasks: { reading: false, homework: false, tidy: false } },
+      { id: 2, surname: "杜", name: "斐恩", animalType: "rabbit", customAvatar: null, stars: 0, lifetimeStars: 0, checkedIn: false, mood: null, time: null, tasks: { reading: false, homework: false, tidy: false } },
+      { id: 3, surname: "林", name: "宥璋", animalType: "fox", customAvatar: null, stars: 0, lifetimeStars: 0, checkedIn: false, mood: null, time: null, tasks: { reading: false, homework: false, tidy: false } },
+      { id: 4, surname: "邱", name: "宥閎", animalType: "cat", customAvatar: null, stars: 0, lifetimeStars: 0, checkedIn: false, mood: null, time: null, tasks: { reading: false, homework: false, tidy: false } },
+      { id: 5, surname: "陳", name: "心貝", animalType: "deer", customAvatar: null, stars: 0, lifetimeStars: 0, checkedIn: false, mood: null, time: null, tasks: { reading: false, homework: false, tidy: false } },
+      { id: 6, surname: "林", name: "子晴", animalType: "panda", customAvatar: null, stars: 0, lifetimeStars: 0, checkedIn: false, mood: null, time: null, tasks: { reading: false, homework: false, tidy: false } },
+      { id: 7, surname: "牛", name: "品璇", animalType: "rabbit", customAvatar: null, stars: 0, lifetimeStars: 0, checkedIn: false, mood: null, time: null, tasks: { reading: false, homework: false, tidy: false } },
+      { id: 8, surname: "李", name: "洋森", animalType: "bear", customAvatar: null, stars: 0, lifetimeStars: 0, checkedIn: false, mood: null, time: null, tasks: { reading: false, homework: false, tidy: false } }
+    ];
+
+    function safeStorageGet(key, def = null) {
+      try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; } catch(e) { return def; }
+    }
+    function safeStorageSet(key, val) {
+      try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+    }
+
+    let students = safeStorageGet("forest_sel_students_v5");
+    if (!students || !Array.isArray(students) || students.length === 0) {
+      students = initial8Students.map((s, idx) => {
+        const full = (s.surname || '') + (s.name || '');
+        return { ...s, slotIndex: idx + 1, zhuyin: buildZhuyinForName(full) };
+      });
+    }
+
+    /* 手繪風格動物頭像 */
+    const pencilAnimalAvatars = {
+      bear: `
+        <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+          <circle cx="26" cy="28" r="14" fill="#8C5327" stroke="#4A250B" stroke-width="2.5"/>
+          <circle cx="26" cy="28" r="7.5" fill="#FFAAA6"/>
+          <circle cx="74" cy="28" r="14" fill="#8C5327" stroke="#4A250B" stroke-width="2.5"/>
+          <circle cx="74" cy="28" r="7.5" fill="#FFAAA6"/>
+          <circle cx="50" cy="56" r="36" fill="#B5733C" stroke="#4A250B" stroke-width="2.5"/>
+          <ellipse cx="50" cy="65" rx="18" ry="13" fill="#FFE5D9"/>
+          <ellipse cx="50" cy="58" rx="6.5" ry="5" fill="#2E170A"/>
+          <circle cx="48.5" cy="56.5" r="1.5" fill="#FFFFFF"/>
+          <path d="M50 63 L50 68 M44 66 Q50 71 56 66" stroke="#2E170A" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <circle cx="37" cy="48" r="4.2" fill="#2E170A"/>
+          <circle cx="35.5" cy="46.5" r="1.5" fill="#FFFFFF"/>
+          <circle cx="63" cy="48" r="4.2" fill="#2E170A"/>
+          <circle cx="61.5" cy="46.5" r="1.5" fill="#FFFFFF"/>
+          <circle cx="29" cy="58" r="5" fill="#FF8BA7" opacity="0.6"/>
+          <circle cx="71" cy="58" r="5" fill="#FF8BA7" opacity="0.6"/>
+        </svg>
+      `,
+      rabbit: `
+        <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+          <ellipse cx="34" cy="26" rx="8" ry="20" fill="#FFFFFF" stroke="#475569" stroke-width="2.5" transform="rotate(-8 34 26)"/>
+          <ellipse cx="34" cy="26" rx="4" ry="14" fill="#FDA4AF" transform="rotate(-8 34 26)"/>
+          <ellipse cx="66" cy="26" rx="8" ry="20" fill="#FFFFFF" stroke="#475569" stroke-width="2.5" transform="rotate(8 66 26)"/>
+          <ellipse cx="66" cy="26" rx="4" ry="14" fill="#FDA4AF" transform="rotate(8 66 26)"/>
+          <circle cx="50" cy="60" r="34" fill="#FFFFFF" stroke="#475569" stroke-width="2.5"/>
+          <polygon points="50,61 45,56 55,56" fill="#FB7185"/>
+          <path d="M50 61 L50 66 M44 64 Q50 69 56 64" stroke="#475569" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <circle cx="36" cy="50" r="4" fill="#1E293B"/>
+          <circle cx="34.5" cy="48.5" r="1.5" fill="#FFFFFF"/>
+          <circle cx="64" cy="50" r="4" fill="#1E293B"/>
+          <circle cx="62.5" cy="48.5" r="1.5" fill="#FFFFFF"/>
+          <circle cx="28" cy="60" r="5" fill="#FDA4AF" opacity="0.6"/>
+          <circle cx="72" cy="60" r="5" fill="#FDA4AF" opacity="0.6"/>
+        </svg>
+      `,
+      fox: `
+        <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+          <polygon points="22,12 40,36 14,38" fill="#D95D1E" stroke="#5A2307" stroke-width="2.5"/>
+          <polygon points="24,16 36,33 18,35" fill="#431407"/>
+          <polygon points="78,12 60,36 86,38" fill="#D95D1E" stroke="#5A2307" stroke-width="2.5"/>
+          <polygon points="76,16 64,33 82,35" fill="#431407"/>
+          <circle cx="50" cy="57" r="34" fill="#EA7329" stroke="#5A2307" stroke-width="2.5"/>
+          <path d="M18 56 Q50 78 82 56 C82 76 68 88 50 88 C32 88 18 76 18 56 Z" fill="#FFFFFF"/>
+          <circle cx="50" cy="65" r="5" fill="#1C1917"/>
+          <circle cx="35" cy="50" r="4" fill="#1C1917"/>
+          <circle cx="33.8" cy="48.5" r="1.4" fill="#FFFFFF"/>
+          <circle cx="65" cy="50" r="4" fill="#1C1917"/>
+          <circle cx="63.8" cy="48.5" r="1.4" fill="#FFFFFF"/>
+        </svg>
+      `,
+      cat: `
+        <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+          <polygon points="26,16 44,36 18,36" fill="#F59E0B" stroke="#633104" stroke-width="2.5"/>
+          <polygon points="27,20 40,34 21,34" fill="#FDA4AF"/>
+          <polygon points="74,16 56,36 82,36" fill="#F59E0B" stroke="#633104" stroke-width="2.5"/>
+          <polygon points="73,20 60,34 79,34" fill="#FDA4AF"/>
+          <circle cx="50" cy="57" r="34" fill="#FBBF24" stroke="#633104" stroke-width="2.5"/>
+          <polygon points="50,59 46,55 54,55" fill="#E11D48"/>
+          <path d="M50 59 L50 64 M44 62 Q50 67 56 62" stroke="#451A03" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <circle cx="35" cy="48" r="4" fill="#1E293B"/>
+          <circle cx="33.8" cy="46.5" r="1.4" fill="#FFFFFF"/>
+          <circle cx="65" cy="48" r="4" fill="#1E293B"/>
+          <circle cx="63.8" cy="46.5" r="1.4" fill="#FFFFFF"/>
+          <line x1="20" y1="57" x2="31" y2="59" stroke="#78350F" stroke-width="2" stroke-linecap="round"/>
+          <line x1="20" y1="65" x2="31" y2="63" stroke="#78350F" stroke-width="2" stroke-linecap="round"/>
+          <line x1="80" y1="57" x2="69" y2="59" stroke="#78350F" stroke-width="2" stroke-linecap="round"/>
+          <line x1="80" y1="65" x2="69" y2="63" stroke="#78350F" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      `,
+      panda: `
+        <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+          <circle cx="26" cy="26" r="14" fill="#1E293B"/>
+          <circle cx="74" cy="26" r="14" fill="#1E293B"/>
+          <circle cx="50" cy="56" r="35" fill="#FFFFFF" stroke="#334155" stroke-width="2.5"/>
+          <ellipse cx="34" cy="50" rx="8" ry="10" fill="#1E293B" transform="rotate(-18 34 50)"/>
+          <circle cx="35" cy="48" r="2.6" fill="#FFFFFF"/>
+          <ellipse cx="66" cy="50" rx="8" ry="10" fill="#1E293B" transform="rotate(18 66 50)"/>
+          <circle cx="65" cy="48" r="2.6" fill="#FFFFFF"/>
+          <ellipse cx="50" cy="61" rx="5.5" ry="4" fill="#1E293B"/>
+          <path d="M50 64 L50 69 M45 67 Q50 72 55 67" stroke="#1E293B" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+      `,
+      deer: `
+        <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-sm">
+          <path d="M32 26 L24 10 M28 18 L20 20" stroke="#68340E" stroke-width="2.8" stroke-linecap="round"/>
+          <path d="M68 26 L76 10 M72 18 L80 20" stroke="#68340E" stroke-width="2.8" stroke-linecap="round"/>
+          <circle cx="50" cy="57" r="34" fill="#E68C48" stroke="#5E2C08" stroke-width="2.5"/>
+          <ellipse cx="50" cy="66" rx="15" ry="10" fill="#FFF7ED"/>
+          <circle cx="50" cy="60" r="4.5" fill="#3D1804"/>
+          <circle cx="37" cy="50" r="4" fill="#1E293B"/>
+          <circle cx="35.8" cy="48.5" r="1.4" fill="#FFFFFF"/>
+          <circle cx="63" cy="50" r="4" fill="#1E293B"/>
+          <circle cx="61.8" cy="48.5" r="1.4" fill="#FFFFFF"/>
+          <circle cx="43" cy="38" r="2" fill="#FFFFFF" opacity="0.8"/>
+          <circle cx="57" cy="38" r="2" fill="#FFFFFF" opacity="0.8"/>
+        </svg>
+      `
+    };
+
+    function getStudentAvatarHtml(student) {
+      if (student.customAvatar) {
+        return `<img src="${student.customAvatar}" class="w-full h-full object-cover rounded-2xl" alt="${student.name}">`;
+      }
+      return pencilAnimalAvatars[student.animalType] || pencilAnimalAvatars.bear;
+    }
+
+    const moodMeta = {
+      happy: { label: "開心", spellAudio: "ㄎㄞ 開，ㄒㄧㄣ 心，開心！", praise: "太棒了！像暖暖的午後陽光，精神飽滿，我們一起快樂讀繪本！" },
+      calm: { label: "平靜", spellAudio: "ㄆㄧㄥˊ 平，ㄐㄧㄥˋ 靜，平靜！", praise: "很棒喔，心情像舒舒服服的綠芽微風，我們慢慢學、慢慢讀。" },
+      tired: { label: "累了", spellAudio: "ㄌㄟˋ 累，ㄌㄜ˙ 了，累了！", praise: "下午辛苦囉！像想休息的小雲朵，我們先喝口溫水做個深呼吸。" },
+      sad: { label: "難過", spellAudio: "ㄋㄢˊ 難，ㄍㄨㄛˋ 過，難過！", praise: "謝謝你願意跟老師分享。老師會一直陪伴你，你非常勇敢喔！" },
+      angry: { label: "生氣", spellAudio: "ㄕㄥ 生，ㄑㄧˋ 氣，生氣！", praise: "心裡有小雷電對不對？沒關係，老師陪你吐氣放鬆，教室永遠是你的避風港。" }
+    };
+
+    const magicalApplePalettes = [
+      { bg: 'radial-gradient(circle at 35% 30%, #FFFDE0 0%, #FF5252 55%, #B71C1C 100%)', border: '#7F0000', glow: '#FF6B6B', label: '紅寶石' },
+      { bg: 'radial-gradient(circle at 35% 30%, #FFFDE7 0%, #FFD54F 50%, #F57F17 100%)', border: '#E65100', glow: '#FFD700', label: '金陽果' },
+      { bg: 'radial-gradient(circle at 35% 30%, #E1F5FE 0%, #4FC3F7 50%, #0288D1 100%)', border: '#01579B', glow: '#4FC3F7', label: '天藍果' },
+      { bg: 'radial-gradient(circle at 35% 30%, #F3E5F5 0%, #BA68C8 55%, #7B1FA2 100%)', border: '#4A148C', glow: '#CE93D8', label: '紫晶果' },
+      { bg: 'radial-gradient(circle at 35% 30%, #FFF8E1 0%, #FFCA28 50%, #FF8F00 100%)', border: '#BF360C', glow: '#FFE082', label: '朝陽果' },
+      { bg: 'radial-gradient(circle at 35% 30%, #E8F5E9 0%, #81C784 55%, #2E7D32 100%)', border: '#1B5E20', glow: '#A5D6A7', label: '翡翠果' },
+      { bg: 'radial-gradient(circle at 35% 30%, #FFEBEE 0%, #EF5350 55%, #C62828 100%)', border: '#8E0000', glow: '#FF8A80', label: '蜜紅果' },
+      { bg: 'radial-gradient(circle at 35% 30%, #FFF3E0 0%, #FF7043 55%, #D84315 100%)', border: '#BF360C', glow: '#FFAB91', label: '珊瑚果' }
+    ];
+
+    const treeCanopyPositions = [
+      { left: "23%", top: "38%" },
+      { left: "31%", top: "20%" },
+      { left: "41%", top: "12%" },
+      { left: "51%", top: "9%" },
+      { left: "48%", top: "27%" },
+      { left: "60%", top: "13%" },
+      { left: "69%", top: "21%" },
+      { left: "77%", top: "38%" },
+      { left: "28%", top: "48%" },
+      { left: "36%", top: "32%" },
+      { left: "44%", top: "20%" },
+      { left: "56%", top: "21%" },
+      { left: "64%", top: "32%" },
+      { left: "72%", top: "48%" },
+      { left: "38%", top: "42%" },
+      { left: "62%", top: "42%" }
+    ];
+
+    /* =========================================================
+       3. 渲染隊員名牌卡片（低年級學扶專用：左大圖、中層星星存摺在前＋姓名靠右不換行）
+       ========================================================= */
+    function renderStudents() {
+      const grid = document.getElementById("student-grid");
+      if (!grid) return;
+      grid.innerHTML = "";
+
+      let checkedCount = 0;
+      let completedTasks = 0;
+
+      students.forEach((student, idx) => {
+        student.slotIndex = idx + 1;
+        if (!student.zhuyin || student.zhuyin.length === 0) {
+          student.zhuyin = buildZhuyinForName((student.surname || '') + (student.name || ''));
+        }
+        if (student.checkedIn) checkedCount++;
+        if (student.tasks?.reading) completedTasks++;
+        if (student.tasks?.homework) completedTasks++;
+        if (student.tasks?.tidy) completedTasks++;
+
+        const isChecked = student.checkedIn;
+        const currentMood = isChecked ? moodMeta[student.mood] : null;
+
+        const card = document.createElement("div");
+        card.className = `game-card-panel p-3.5 sm:p-4 flex flex-col justify-between transition-all ${
+          isChecked ? 'bg-[#F7FCF8] border-[#256635]' : 'bg-white'
+        }`;
+
+        const nameHtml = (student.zhuyin || []).map(item => `
+          <span class="zhuyin-char">
+            <span class="hanzi">${item.char}</span>
+            <span class="bpmf-col">
+              ${item.tone === '˙' ? `<span class="light-tone">˙</span>` : ''}
+              ${item.bpmf.map(b => `<span>${b}</span>`).join('')}
+              ${item.tone && item.tone !== '˙' ? `<span class="tone">${item.tone}</span>` : ''}
+            </span>
+          </span>
+        `).join('');
+
+        card.innerHTML = `
+          <!-- 上半段：主角級特大清晰照片 (左) + 清爽直覺的獎勵控制欄 (右) -->
+          <div class="flex items-stretch justify-between gap-3 sm:gap-4">
+            <!-- 學生圖片區大又醒目：全卡片核心，完全無按鈕遮擋 -->
+            <div class="relative group flex-shrink-0">
+              <div class="w-32 h-32 min-[500px]:w-34 min-[500px]:h-34 md:w-36 md:h-36 game-avatar-frame flex items-center justify-center bg-white p-1" onclick="openMoodModal(${student.id})" title="點擊大頭貼進行心情簽到">
+                ${getStudentAvatarHtml(student)}
+              </div>
+              <button onclick="triggerDirectUpload(${student.id}, event)" title="更換照片" class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center text-sm shadow-md border-2 border-white transition active:scale-90 z-10">
+                📷
+              </button>
+            </div>
+            
+            <!-- 右側功能操控區：獨立寬敞，只放 +1 大按鈕與狀態 -->
+            <div class="flex flex-col items-end justify-between flex-1 min-w-0 py-0.5">
+              <!-- 老師嘉獎 +1 巨型大按鈕 (右上角最顯眼好按) -->
+              <button onclick="addStar(${student.id})" title="老師嘉獎 +1 顆星" class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-b from-amber-300 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-600 active:scale-90 text-amber-950 font-black text-xl md:text-2xl flex items-center justify-center border-3 border-amber-700 shadow-md transition flex-shrink-0">
+                +1
+              </button>
+
+              <!-- 果實番號與灌溉/簽到狀態標籤 (貼齊右下方) -->
+              <div class="flex flex-col items-end gap-1.5 w-full mt-auto">
+                <span class="text-[11px] text-[#0B3315] font-black bg-[#EBF6EE] px-2 py-0.5 rounded-lg border border-[#A4DDB5] whitespace-nowrap">
+                  #${student.slotIndex} 號果實
+                </span>
+
+                ${isChecked ? `
+                  <span class="text-xs font-black px-2.5 py-1 rounded-full border bg-[#E3F6E7] text-[#06240E] border-[#3FA05B] whitespace-nowrap shadow-2xs">
+                    🍎 ${currentMood ? currentMood.label : '已結實'}
+                  </span>
+                ` : `
+                  <button onclick="openMoodModal(${student.id})" class="text-xs bg-amber-400 hover:bg-amber-500 text-amber-950 font-black px-3 py-1 rounded-full animate-pulse shadow-xs whitespace-nowrap">
+                    點我灌溉
+                  </button>
+                `}
+              </div>
+            </div>
+          </div>
+
+          <!-- 中間層：榮譽存摺 (左) + 學生姓名注音 (右，嚴格不換行) -->
+          <div class="mt-3.5 mb-2.5 px-2 py-1.5 rounded-2xl bg-gradient-to-r from-amber-50/70 via-emerald-50/40 to-transparent border border-amber-200/60 flex items-center justify-between gap-2 overflow-visible">
+            <!-- 左側：累積星星存摺與校正鈕 (清楚易辨識) -->
+            <button onclick="openStarCorrectionModal(${student.id})" title="點擊校正星星數量" class="bg-white hover:bg-amber-50 active:scale-95 border-2 border-amber-400 px-3 py-1 rounded-xl flex items-center gap-1.5 shadow-2xs transition flex-shrink-0">
+              <span class="text-amber-500 text-lg">⭐</span>
+              <span class="text-base font-black text-amber-950">${student.stars || 0}</span>
+            </button>
+
+            <!-- 右側：學生姓名區 (靠右且絕對不換行) -->
+            <div class="cursor-pointer overflow-visible flex items-center justify-end flex-1 min-w-0" onclick="openMoodModal(${student.id})">
+              <div class="student-name-row">
+                ${nameHtml}
+              </div>
+            </div>
+          </div>
+
+          <!-- 下半段：午後三任務印章區 -->
+          <div class="pt-2 border-t border-slate-100">
+            <div class="grid grid-cols-3 gap-2 text-center">
+              <button onclick="toggleTask(${student.id}, 'reading')" class="py-2 px-1 game-stamp-badge flex flex-col items-center justify-center ${student.tasks?.reading ? 'active-reading' : 'inactive'}">
+                <span class="text-base mb-0.5">${student.tasks?.reading ? '📖' : '⚪'}</span>
+                <span class="text-xs font-black">共讀</span>
+              </button>
+              <button onclick="toggleTask(${student.id}, 'homework')" class="py-2 px-1 game-stamp-badge flex flex-col items-center justify-center ${student.tasks?.homework ? 'active-task' : 'inactive'}">
+                <span class="text-base mb-0.5">${student.tasks?.homework ? '✏️' : '⚪'}</span>
+                <span class="text-xs font-black">任務</span>
+              </button>
+              <button onclick="toggleTask(${student.id}, 'tidy')" class="py-2 px-1 game-stamp-badge flex flex-col items-center justify-center ${student.tasks?.tidy ? 'active-tidy' : 'inactive'}">
+                <span class="text-base mb-0.5">${student.tasks?.tidy ? '✨' : '⚪'}</span>
+                <span class="text-xs font-black">整潔</span>
+              </button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      updateLargeTreeStage(checkedCount, completedTasks);
+      if (typeof renderCareList === 'function') renderCareList();
+    }
+
+    function updateLargeTreeStage(checkedCount, completedTasks) {
+      document.getElementById("tree-apple-count").textContent = `${checkedCount} / ${students.length} 顆`;
+      document.getElementById("watering-status-label").textContent = `已灌溉 ${checkedCount} 次`;
+
+      const percent = Math.round((checkedCount / Math.max(1, students.length)) * 100);
+      document.getElementById("tree-progress-percent").textContent = `${percent}%`;
+      document.getElementById("tree-progress-fill").style.width = `${percent}%`;
+
+      const stage = document.getElementById("interactive-apples-stage");
+      if (!stage) return;
+      stage.innerHTML = "";
+
+      students.forEach((student, idx) => {
+        const slotIdx = idx + 1;
+        const pos = treeCanopyPositions[idx % treeCanopyPositions.length];
+        const palette = magicalApplePalettes[idx % magicalApplePalettes.length];
+
+        const slotWrap = document.createElement("div");
+        slotWrap.id = `tree-apple-slot-${slotIdx}`;
+        slotWrap.className = "absolute cursor-pointer";
+        slotWrap.style.left = pos.left;
+        slotWrap.style.top = pos.top;
+        slotWrap.onclick = () => handleAppleClick(slotIdx);
+
+        if (student.checkedIn) {
+          slotWrap.innerHTML = `
+            <div id="apple-graphic-${slotIdx}" class="animate-apple-sway-idle relative flex items-center justify-center">
+              <div class="absolute -inset-3 pointer-events-none animate-sparkle-spin flex items-center justify-center">
+                <span class="absolute -top-1 -right-1 text-amber-300 text-sm font-black">✦</span>
+                <span class="absolute -bottom-1 -left-1 text-yellow-300 text-xs font-black">★</span>
+              </div>
+              <div class="absolute -top-2 left-1/2 -translate-x-1/2 flex items-center pointer-events-none">
+                <span class="w-1 h-3 bg-[#4A2608] rounded-t-sm -rotate-6"></span>
+                <span class="w-3 h-2 rounded-full bg-[#75C638] -ml-0.5 border border-[#3E6B20] rotate-12"></span>
+              </div>
+              <div class="w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-xl border-2 cursor-pointer transform hover:scale-115 transition-transform overflow-hidden"
+                   style="background: ${palette.bg}; border-color: ${palette.border}; box-shadow: 0 4px 12px rgba(0,0,0,0.35), 0 0 16px ${palette.glow};"
+                   title="${student.name} 的${palette.label} (${moodMeta[student.mood]?.label || '好心情'})">
+                <span class="text-white font-black text-sm md:text-base drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.8)]">
+                  ${student.name.charAt(0)}
+                </span>
+                <span class="absolute top-1.5 left-2 w-2.5 h-1.5 bg-white/80 rounded-full rotate-[-30deg] pointer-events-none"></span>
+              </div>
+            </div>
+          `;
+        } else {
+          slotWrap.innerHTML = `
+            <div id="apple-graphic-${slotIdx}" class="apple-bud-unripe flex flex-col items-center">
+              <span class="w-10 h-10 rounded-full bg-white/95 hover:bg-white border-2 border-dashed border-emerald-600 text-emerald-900 text-xs font-black flex items-center justify-center shadow-md backdrop-blur-xs">
+                ${slotIdx}
+              </span>
+            </div>
+          `;
+        }
+
+        stage.appendChild(slotWrap);
+      });
+
+      document.getElementById("class-task-summary").textContent = `完成 ${completedTasks} / ${students.length * 3} 項榮譽印章`;
+    }
+
+    /* =========================================================
+       4. 學生照片與名冊增刪管理
+       ========================================================= */
+    let uploadTargetStudentId = null;
+
+    function openPhotoManagerModal() {
+      const modal = document.getElementById("photo-manager-modal");
+      if (!modal) return;
+      renderPhotoManagerCards();
+      modal.classList.remove("hidden");
+    }
+
+    function closePhotoManagerModal() {
+      const modal = document.getElementById("photo-manager-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function renderPhotoManagerCards() {
+      const grid = document.getElementById("photo-manager-grid");
+      if (!grid) return;
+      grid.innerHTML = "";
+
+      students.forEach(st => {
+        const card = document.createElement("div");
+        card.className = "p-3 rounded-2xl bg-[#F6FAF7] border-2 border-emerald-200 flex flex-col items-center justify-between gap-2 shadow-xs";
+        
+        card.innerHTML = `
+          <div class="w-full flex items-center justify-between">
+            <div class="font-black text-slate-800 text-sm flex items-center gap-1">
+              <span>#${st.slotIndex}</span>
+              <span>${st.surname}${st.name}</span>
+            </div>
+            <button onclick="removeStudent(${st.id})" title="移除此隊員" class="text-rose-500 hover:text-rose-700 hover:bg-rose-50 p-1 rounded-lg transition active:scale-90 text-xs font-black">
+              🗑️
+            </button>
+          </div>
+
+          <div class="w-20 h-20 rounded-2xl border-2 border-emerald-600 bg-white p-1 overflow-hidden shadow-inner flex items-center justify-center">
+            ${getStudentAvatarHtml(st)}
+          </div>
+
+          <div class="text-[10px] text-slate-500 font-bold">
+            ${st.customAvatar ? '📷 已設定自訂相片' : '🎨 森林動物頭像'}
+          </div>
+
+          <div class="flex flex-col gap-1.5 w-full">
+            <div class="flex gap-1.5 w-full">
+              <button onclick="triggerDirectUpload(${st.id})" class="flex-1 py-1.5 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black shadow-xs transition active:scale-95">
+                ${st.customAvatar ? '換照片' : '上傳相片'}
+              </button>
+              ${st.customAvatar ? `
+                <button onclick="resetStudentPhoto(${st.id})" class="py-1.5 px-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-[11px] font-black transition active:scale-95" title="恢復動物頭像">
+                  恢復
+                </button>
+              ` : ''}
+            </div>
+
+            <button onclick="removeStudent(${st.id})" class="w-full py-1 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-[10px] font-black border border-rose-200 transition active:scale-95">
+              移除隊員
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function openAddStudentModal() {
+      document.getElementById("new-student-surname").value = "";
+      document.getElementById("new-student-name").value = "";
+      document.getElementById("new-student-photo").value = "";
+      document.getElementById("add-student-modal").classList.remove("hidden");
+    }
+
+    function closeAddStudentModal() {
+      document.getElementById("add-student-modal").classList.add("hidden");
+    }
+
+    function submitNewStudent(event) {
+      event.preventDefault();
+      const surname = document.getElementById("new-student-surname").value.trim();
+      const name = document.getElementById("new-student-name").value.trim();
+      const animalType = document.getElementById("new-student-animal").value;
+      const photoInput = document.getElementById("new-student-photo");
+
+      if (!surname || !name) {
+        showToast("⚠️ 請輸入姓氏與名字！");
+        return;
+      }
+
+      const nextId = students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1;
+      const fullName = surname + name;
+
+      const newStudent = {
+        id: nextId,
+        surname: surname,
+        name: name,
+        animalType: animalType,
+        customAvatar: null,
+        stars: 0,
+        lifetimeStars: 0,
+        checkedIn: false,
+        mood: null,
+        time: null,
+        tasks: { reading: false, homework: false, tidy: false },
+        slotIndex: students.length + 1,
+        zhuyin: buildZhuyinForName(fullName)
+      };
+
+      const file = photoInput.files && photoInput.files[0];
+      if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          compressImageToDataUrl(e.target.result, 250, (compressedUrl) => {
+            newStudent.customAvatar = compressedUrl;
+            finalizeAddStudent(newStudent);
+          });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        finalizeAddStudent(newStudent);
+      }
+    }
+
+    function finalizeAddStudent(newStudent) {
+      students.push(newStudent);
+      safeStorageSet("forest_sel_students_v5", students);
+      closeAddStudentModal();
+      renderStudents();
+      renderPhotoManagerCards();
+      playAppleSound();
+      showToast(`🎉 歡迎 ${newStudent.surname}${newStudent.name} 加入特攻隊！`);
+    }
+
+    function removeStudent(studentId) {
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
+
+      showConfirmModal({
+        icon: "🗑️",
+        title: `移除隊員確認`,
+        desc: `確定要將「${student.surname}${student.name}」自特攻隊名冊中移除嗎？這將會同步重整樹上的果實與統計資料。`,
+        onConfirm: () => {
+          students = students.filter(s => s.id !== studentId);
+          students.forEach((s, idx) => { s.slotIndex = idx + 1; });
+          safeStorageSet("forest_sel_students_v5", students);
+          renderStudents();
+          renderPhotoManagerCards();
+          playWaterSound();
+          showToast(`🗑️ 已將 ${student.surname}${student.name} 從名冊中移除。`);
+        }
+      });
+    }
+
+    function triggerDirectUpload(studentId, event = null) {
+      if (event) event.stopPropagation();
+      uploadTargetStudentId = studentId;
+      const input = document.getElementById("global-student-photo-input");
+      if (input) {
+        input.value = "";
+        input.click();
+      }
+    }
+
+    function compressImageToDataUrl(sourceDataUrl, maxDim, callback) {
+      const img = new Image();
+      img.onload = function() {
+        let w = img.width;
+        let h = img.height;
+        if (w > h) {
+          if (w > maxDim) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          }
+        } else {
+          if (h > maxDim) {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        const compressed = canvas.toDataURL("image/jpeg", 0.85);
+        callback(compressed);
+      };
+      img.src = sourceDataUrl;
+    }
+
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (!file || !uploadTargetStudentId) return;
+
+      if (!file.type.startsWith("image/")) {
+        showToast("⚠️ 請選擇圖檔格式 (JPG, PNG 等)");
+        return;
+      }
+
+      showToast("⏳ 正在處理並縮圖照片...");
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        compressImageToDataUrl(e.target.result, 250, (compressedDataUrl) => {
+          const student = students.find(s => s.id === uploadTargetStudentId);
+          if (student) {
+            student.customAvatar = compressedDataUrl;
+            safeStorageSet("forest_sel_students_v5", students);
+            renderStudents();
+            renderPhotoManagerCards();
+            showToast(`📸 ${student.name} 的照片設定成功！`);
+          }
+          uploadTargetStudentId = null;
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetStudentPhoto(studentId) {
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
+
+      student.customAvatar = null;
+      safeStorageSet("forest_sel_students_v5", students);
+      renderStudents();
+      renderPhotoManagerCards();
+      showToast(`🔄 已恢復 ${student.name} 的森林動物頭像！`);
+    }
+
+    /* =========================================================
+       5. 互動音效與星數管理
+       ========================================================= */
+    let xylophone = null;
+    function initAudio() {
+      if (!xylophone && typeof Tone !== 'undefined') {
+        try {
+          xylophone = new Tone.PolySynth(Tone.FMSynth, {
+            harmonicity: 3.01,
+            modulationIndex: 2,
+            oscillator: { type: "sine" },
+            envelope: { attack: 0.005, decay: 0.25, sustain: 0.05, release: 0.4 }
+          }).toDestination();
+          xylophone.volume.value = -6;
+        } catch(e) {}
+      }
+    }
+
+    function playAppleSound() {
+      try {
+        initAudio();
+        Tone.start();
+        const now = Tone.now();
+        xylophone.triggerAttackRelease("C5", "16n", now);
+        xylophone.triggerAttackRelease("E5", "16n", now + 0.08);
+        xylophone.triggerAttackRelease("G5", "16n", now + 0.16);
+        xylophone.triggerAttackRelease("C6", "8n", now + 0.24);
+      } catch(e) {}
+    }
+
+    function playWaterSound() {
+      try {
+        initAudio();
+        Tone.start();
+        xylophone.triggerAttackRelease("A5", "32n");
+      } catch(e) {}
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-TW';
+        utterance.rate = 0.78;
+        utterance.pitch = 1.05;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function handleAppleClick(slotIdx) {
+      const student = students.find(s => s.slotIndex === slotIdx);
+      if (student) {
+        if (student.checkedIn) {
+          const palette = magicalApplePalettes[(slotIdx - 1) % magicalApplePalettes.length];
+          speakText(`這是 ${student.name} 的${palette.label}！今天心情是 ${moodMeta[student.mood]?.label || '好心情'}！`);
+          triggerWateringAnimation(slotIdx);
+        } else {
+          openMoodModal(student.id);
+        }
+      }
+    }
+
+    function triggerWateringAnimation(targetSlot = null) {
+      playWaterSound();
+      const container = document.getElementById("water-droplets-container");
+      if (container) {
+        const drop = document.createElement("div");
+        drop.className = "absolute text-3xl animate-water-drop pointer-events-none z-30";
+        drop.textContent = "💧";
+        const randomX = Math.floor(Math.random() * 120) - 60;
+        drop.style.transform = `translateX(${randomX}px)`;
+        container.appendChild(drop);
+        setTimeout(() => drop.remove(), 1100);
+      }
+
+      if (targetSlot) {
+        const slotEl = document.getElementById(`apple-graphic-${targetSlot}`);
+        if (slotEl) {
+          slotEl.classList.remove("animate-apple-bloom");
+          void slotEl.offsetWidth;
+          slotEl.classList.add("animate-apple-bloom");
+        }
+      }
+    }
+
+    /* 7 秒誤觸復原系統 */
+    let lastStarAction = null;
+    let undoTimerId = null;
+
+    function addStar(studentId) {
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
+
+      student.stars = (student.stars || 0) + 1;
+      student.lifetimeStars = (student.lifetimeStars || 0) + 1;
+      lastStarAction = { studentId, diff: 1 };
+      
+      safeStorageSet("forest_sel_students_v5", students);
+      renderStudents();
+      playAppleSound();
+      showUndoBtn(student.name);
+      showToast(`⭐ 已為 ${student.name} 獎勵 1 顆星星！`);
+    }
+
+    function showUndoBtn(name) {
+      const btn = document.getElementById("undo-star-btn");
+      const timerSpan = document.getElementById("undo-timer");
+      if (!btn || !timerSpan) return;
+
+      btn.classList.remove("hidden");
+      let timeLeft = 7;
+      timerSpan.textContent = timeLeft;
+
+      if (undoTimerId) clearInterval(undoTimerId);
+      undoTimerId = setInterval(() => {
+        timeLeft--;
+        timerSpan.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(undoTimerId);
+          btn.classList.add("hidden");
+          lastStarAction = null;
+        }
+      }, 1000);
+    }
+
+    function undoAddStar() {
+      if (!lastStarAction) return;
+      const student = students.find(s => s.id === lastStarAction.studentId);
+      if (student && student.stars > 0) {
+        student.stars--;
+        student.lifetimeStars = Math.max(0, (student.lifetimeStars || 0) - 1);
+        safeStorageSet("forest_sel_students_v5", students);
+        renderStudents();
+        playWaterSound();
+        showToast(`↩️ 已復原 ${student.name} 剛才增加的星星。`);
+      }
+      document.getElementById("undo-star-btn").classList.add("hidden");
+      if (undoTimerId) clearInterval(undoTimerId);
+      lastStarAction = null;
+    }
+
+    let activeCorrectionStudentId = null;
+    function openStarCorrectionModal(studentId) {
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
+      activeCorrectionStudentId = studentId;
+      document.getElementById("correction-student-name").textContent = `${student.surname}${student.name}`;
+      document.getElementById("correction-star-count").textContent = student.stars || 0;
+      document.getElementById("star-correction-modal").classList.remove("hidden");
+    }
+
+    function adjustStarCount(delta) {
+      if (!activeCorrectionStudentId) return;
+      const student = students.find(s => s.id === activeCorrectionStudentId);
+      if (!student) return;
+
+      if ((student.stars || 0) + delta < 0) {
+        showToast("⚠️ 星星數量不能低於 0 顆！");
+        return;
+      }
+
+      student.stars = (student.stars || 0) + delta;
+      if (delta > 0) student.lifetimeStars = (student.lifetimeStars || 0) + delta;
+      
+      document.getElementById("correction-star-count").textContent = student.stars;
+      safeStorageSet("forest_sel_students_v5", students);
+      renderStudents();
+      playWaterSound();
+    }
+
+    function closeStarCorrectionModal() {
+      document.getElementById("star-correction-modal").classList.add("hidden");
+      activeCorrectionStudentId = null;
+    }
+
+    /* 簽到與心情選擇 */
+    let activeMoodStudentId = null;
+    function openMoodModal(studentId) {
+      activeMoodStudentId = studentId;
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
+
+      document.getElementById("modal-student-name").textContent = `${student.surname}${student.name}`;
+      document.getElementById("modal-student-avatar-box").innerHTML = getStudentAvatarHtml(student);
+
+      const modal = document.getElementById("mood-modal");
+      const card = document.getElementById("mood-modal-card");
+      modal.classList.remove("hidden");
+      setTimeout(() => { card.classList.remove("scale-95", "opacity-0"); card.classList.add("scale-100", "opacity-100"); }, 20);
+
+      speakText(`${student.name} 午安！今天的心情像哪一位小精靈呢？你可以跟著注音拼拼看喔！`);
+    }
+
+    function spellCurrentSelectedMood() {
+      speakText("跟我一起拼拼看：ㄎㄞ 開，ㄒㄧㄣ 心，開心！ㄆㄧㄥˊ 平，ㄐㄧㄥˋ 靜，平靜！ㄌㄟˋ 累，ㄌㄜ˙ 了，累了！");
+    }
+
+    function closeMoodModal() {
+      const modal = document.getElementById("mood-modal");
+      const card = document.getElementById("mood-modal-card");
+      card.classList.remove("scale-100", "opacity-100");
+      card.classList.add("scale-95", "opacity-0");
+      setTimeout(() => { modal.classList.add("hidden"); activeMoodStudentId = null; }, 180);
+    }
+
+    function selectMood(moodKey) {
+      if (!activeMoodStudentId) return;
+      const student = students.find(s => s.id === activeMoodStudentId);
+      if (!student) return;
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      student.checkedIn = true;
+      student.mood = moodKey;
+      student.time = timeStr;
+      student.stars = (student.stars || 0) + 1;
+      student.lifetimeStars = (student.lifetimeStars || 0) + 1;
+
+      safeStorageSet("forest_sel_students_v5", students);
+      closeMoodModal();
+      renderStudents();
+      triggerWateringAnimation(student.slotIndex);
+      playAppleSound();
+      speakText(moodMeta[moodKey].praise);
+      showToast(`🍎 ${student.name} 灌溉完成！大樹長出一顆魔法蘋果！`);
+    }
+
+    function toggleTask(studentId, taskKey) {
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
+
+      if (!student.tasks) student.tasks = { reading: false, homework: false, tidy: false };
+      student.tasks[taskKey] = !student.tasks[taskKey];
+
+      if (student.tasks[taskKey]) {
+        student.stars = (student.stars || 0) + 1;
+        student.lifetimeStars = (student.lifetimeStars || 0) + 1;
+        playAppleSound();
+      } else {
+        student.stars = Math.max(0, (student.stars || 0) - 1);
+        playWaterSound();
+      }
+
+      safeStorageSet("forest_sel_students_v5", students);
+      renderStudents();
+    }
+
+    function triggerQuickCompleteWithGuard() {
+      showConfirmModal({
+        icon: "✨",
+        title: "一鍵全員蓋章確認",
+        desc: "確定要為全班隊員點亮今日所有午後任務印章嗎？這將為每項未完成任務各累積 1 顆星星！",
+        onConfirm: () => {
+          students.forEach(s => {
+            if (!s.tasks) s.tasks = {};
+            if (!s.tasks.reading) { s.tasks.reading = true; s.stars = (s.stars||0)+1; s.lifetimeStars = (s.lifetimeStars||0)+1; }
+            if (!s.tasks.homework) { s.tasks.homework = true; s.stars = (s.stars||0)+1; s.lifetimeStars = (s.lifetimeStars||0)+1; }
+            if (!s.tasks.tidy) { s.tasks.tidy = true; s.stars = (s.stars||0)+1; s.lifetimeStars = (s.lifetimeStars||0)+1; }
+          });
+          safeStorageSet("forest_sel_students_v5", students);
+          renderStudents();
+          playAppleSound();
+          speakText("太棒了！特攻隊員全員完成午後任務！");
+          showToast("✨ 全員午後任務印章已全數點亮！");
+        }
+      });
+    }
+
+    /* =========================================================
+       6. 森林禮物小舖系統（整併三大最新禮品為核心預設）
+       ========================================================= */
+    const defaultShopItems = [
+      { id: 'item_music_relax', title: '音樂放輕鬆隊長', cost: 5, icon: '🎵', desc: '為全班點播一首放鬆伴讀輕音樂，營造專注安定的午後！' },
+      { id: 'item_star_captain', title: '星星首席小隊長', cost: 8, icon: '⭐', desc: '榮任今日星星首席小隊長，帶領特攻隊點亮全樹魔法蘋果！' },
+      { id: 'item_sticker_pack', title: '特攻隊貼紙一張', cost: 3, icon: '✨', desc: '獲得一張手繪色鉛筆森林特攻隊榮譽紀念貼紙！' },
+      { id: 'item_waterer_master', title: '大樹首席灌溉官', cost: 10, icon: '💧', desc: '獲得在大螢幕連續為全樹澆灌七彩甘露的至高特權！' }
+    ];
+
+    const SHOP_STORAGE_KEY = "forest_sel_shop_items_v6";
+    let shopItems = safeStorageGet(SHOP_STORAGE_KEY);
+    if (!shopItems || !Array.isArray(shopItems) || shopItems.length === 0) {
+      shopItems = defaultShopItems;
+      safeStorageSet(SHOP_STORAGE_KEY, shopItems);
+    }
+
+    let isShopEditMode = false;
+
+    function toggleShopEditMode() {
+      isShopEditMode = !isShopEditMode;
+      const toggleBtn = document.getElementById("shop-edit-mode-toggle");
+      const studentBar = document.getElementById("shop-student-bar");
+      const teacherBar = document.getElementById("shop-teacher-edit-bar");
+
+      if (isShopEditMode) {
+        toggleBtn.innerHTML = `<span>✅ 完成編輯</span>`;
+        toggleBtn.className = "px-3.5 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm font-black transition active:scale-95 flex items-center gap-1 shadow-xs";
+        studentBar.classList.add("hidden");
+        teacherBar.classList.remove("hidden");
+      } else {
+        toggleBtn.innerHTML = `<span>⚙️ 老師編輯禮品</span>`;
+        toggleBtn.className = "px-3.5 py-2 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-950 border-2 border-amber-300 text-xs md:text-sm font-black transition active:scale-95 flex items-center gap-1.5 shadow-xs";
+        studentBar.classList.remove("hidden");
+        teacherBar.classList.add("hidden");
+      }
+
+      updateShopDisplay();
+    }
+
+    function openGiftShop() {
+      isShopEditMode = false;
+      const toggleBtn = document.getElementById("shop-edit-mode-toggle");
+      if (toggleBtn) {
+        toggleBtn.innerHTML = `<span>⚙️ 老師編輯禮品</span>`;
+        toggleBtn.className = "px-3.5 py-2 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-950 border-2 border-amber-300 text-xs md:text-sm font-black transition active:scale-95 flex items-center gap-1.5 shadow-xs";
+      }
+      document.getElementById("shop-student-bar").classList.remove("hidden");
+      document.getElementById("shop-teacher-edit-bar").classList.add("hidden");
+
+      const select = document.getElementById("shop-student-select");
+      if (select) {
+        select.innerHTML = "";
+        students.forEach(s => {
+          const opt = document.createElement("option");
+          opt.value = s.id;
+          opt.textContent = `${s.surname}${s.name}`;
+          select.appendChild(opt);
+        });
+      }
+      updateShopDisplay();
+      document.getElementById("gift-shop-modal").classList.remove("hidden");
+    }
+
+    function closeGiftShop() {
+      document.getElementById("gift-shop-modal").classList.add("hidden");
+    }
+
+    function updateShopDisplay() {
+      const select = document.getElementById("shop-student-select");
+      const studentId = select ? parseInt(select.value, 10) : null;
+      const student = students.find(s => s.id === studentId);
+      const currentStars = student ? (student.stars || 0) : 0;
+
+      const starsEl = document.getElementById("shop-student-stars");
+      if (starsEl) starsEl.textContent = currentStars;
+
+      const grid = document.getElementById("shop-items-grid");
+      if (!grid) return;
+      grid.innerHTML = "";
+
+      if (shopItems.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-1 md:col-span-2 text-center py-12 text-slate-400 font-black text-sm bg-white/70 rounded-3xl border-2 border-dashed border-amber-200">
+            目前禮物小舖還沒有禮品喔！請點擊上方「➕ 新增禮品」開始建立。
+          </div>
+        `;
+        return;
+      }
+
+      shopItems.forEach(item => {
+        const canAfford = currentStars >= item.cost;
+        const card = document.createElement("div");
+        card.className = `shop-spell-card p-4 md:p-5 gap-3.5 relative ${
+          isShopEditMode
+            ? 'bg-[#F9FCFA] border-emerald-400'
+            : (canAfford ? 'bg-gradient-to-b from-[#FFFDF9] via-[#FFFFFF] to-[#FFF9EE]' : 'bg-slate-50/90 border-slate-300 opacity-80')
+        }`;
+
+        if (isShopEditMode) {
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3 flex-1 min-w-0">
+                <span class="text-3xl p-2.5 rounded-2xl bg-amber-50 border border-amber-200 shadow-xs flex-shrink-0">${item.icon || '🎁'}</span>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center flex-wrap gap-1 leading-snug">
+                    ${renderZhuyinSpellText(item.title, "text-emerald-950")}
+                  </div>
+                  <div class="text-xs font-black text-emerald-800 mt-2 flex items-center gap-1.5">
+                    <span>所需星星門檻：</span>
+                    <span class="text-sm font-black text-amber-700 bg-amber-100/90 px-2.5 py-0.5 rounded-full border border-amber-300">${item.cost} 顆 ⭐</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button onclick="openEditShopItemModal('${item.id}')" class="px-3 py-2 bg-amber-100 hover:bg-amber-200 active:scale-90 text-amber-950 border-2 border-amber-300 rounded-xl text-xs font-black transition flex items-center gap-1 shadow-xs" title="修改禮品">
+                  <span>✏️ 編輯</span>
+                </button>
+                <button onclick="deleteShopItemConfirm('${item.id}')" class="px-3 py-2 bg-rose-100 hover:bg-rose-200 active:scale-90 text-rose-900 border-2 border-rose-300 rounded-xl text-xs font-black transition flex items-center gap-1 shadow-xs" title="刪除禮品">
+                  <span>🗑️ 刪除</span>
+                </button>
+              </div>
+            </div>
+
+            ${item.desc ? `
+              <div class="bg-white/90 p-2.5 rounded-xl border border-slate-200 text-xs text-slate-600 font-bold leading-relaxed line-clamp-2">
+                ${item.desc}
+              </div>
+            ` : ''}
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="flex items-start gap-3.5">
+              <div class="w-16 h-16 md:w-18 md:h-18 pencil-shading-box flex-shrink-0 flex items-center justify-center text-3xl md:text-4xl shadow-inner border-2 border-amber-300 bg-white rounded-2xl">
+                ${item.icon || '🎁'}
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center justify-start gap-0.5 max-h-[4.8rem] overflow-hidden leading-tight py-0.5">
+                  ${renderZhuyinSpellText(item.title, "text-amber-950")}
+                </div>
+              </div>
+            </div>
+
+            ${item.desc ? `
+              <div class="bg-[#FFF9EE] px-3.5 py-2 rounded-2xl border border-amber-200/80 text-xs md:text-[13px] text-[#4E2802] font-black leading-relaxed flex items-center gap-2">
+                <span class="text-amber-500 text-sm flex-shrink-0">✨</span>
+                <span class="line-clamp-2">${item.desc}</span>
+              </div>
+            ` : ''}
+
+            <div class="pt-2.5 border-t border-amber-100 flex flex-wrap items-center justify-between gap-2.5 mt-auto">
+              <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1 text-xs font-black text-amber-950 bg-amber-100/80 px-3 py-1 rounded-xl border border-amber-300 shadow-2xs">
+                  <span>需要</span>
+                  <span class="text-base font-black text-amber-600">${item.cost}</span>
+                  <span>顆 ⭐</span>
+                </div>
+
+                <button onclick="speakShopItem('${item.title}', '${item.desc || ''}', ${item.cost})" class="bg-white hover:bg-amber-100 active:scale-90 text-amber-900 border border-amber-300 px-2.5 py-1 rounded-xl text-xs font-black shadow-xs flex items-center gap-1 transition">
+                  <span>🔊 聽發音</span>
+                </button>
+              </div>
+
+              <div class="w-full sm:w-auto flex-1 sm:flex-initial text-right">
+                <button onclick="redeemGift('${item.id}')" class="w-full sm:w-32 py-2 px-4 rounded-2xl text-xs md:text-sm font-black transition flex items-center justify-center gap-1.5 shadow-sm ${
+                  canAfford 
+                    ? 'game-gold-btn active:scale-95' 
+                    : 'bg-slate-200 text-slate-400 border-2 border-slate-300 cursor-not-allowed'
+                }" ${canAfford ? '' : 'disabled'}>
+                  <span>${canAfford ? '✨ 立即兌換' : '努力集星中'}</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        grid.appendChild(card);
+      });
+    }
+
+    function speakShopItem(title, desc, cost) {
+      const speech = `${title}！需要 ${cost} 顆星星！${desc ? '兌換特權是：' + desc : ''}`;
+      speakText(speech);
+    }
+
+    function openEditShopItemModal(itemId = null) {
+      const modal = document.getElementById("edit-shop-item-modal");
+      const titleEl = document.getElementById("edit-shop-item-title");
+      const idInput = document.getElementById("edit-shop-item-id");
+      const iconInput = document.getElementById("edit-shop-item-icon");
+      const nameInput = document.getElementById("edit-shop-item-name");
+      const costInput = document.getElementById("edit-shop-item-cost");
+      const descInput = document.getElementById("edit-shop-item-desc");
+
+      if (itemId) {
+        const item = shopItems.find(i => i.id === itemId);
+        if (!item) return;
+        titleEl.textContent = "修改榮譽禮品";
+        idInput.value = item.id;
+        iconInput.value = item.icon || "🎁";
+        nameInput.value = item.title || "";
+        costInput.value = item.cost || 1;
+        descInput.value = item.desc || "";
+      } else {
+        titleEl.textContent = "新增榮譽禮品";
+        idInput.value = "";
+        iconInput.value = "🎁";
+        nameInput.value = "";
+        costInput.value = "3";
+        descInput.value = "";
+      }
+
+      modal.classList.remove("hidden");
+    }
+
+    function closeEditShopItemModal() {
+      document.getElementById("edit-shop-item-modal").classList.add("hidden");
+    }
+
+    function submitShopItemForm(event) {
+      event.preventDefault();
+      const id = document.getElementById("edit-shop-item-id").value;
+      const icon = document.getElementById("edit-shop-item-icon").value.trim() || "🎁";
+      const title = document.getElementById("edit-shop-item-name").value.trim();
+      const cost = parseInt(document.getElementById("edit-shop-item-cost").value, 10) || 1;
+      const desc = document.getElementById("edit-shop-item-desc").value.trim();
+
+      if (!title) {
+        showToast("⚠️ 請輸入禮品名稱！");
+        return;
+      }
+
+      if (id) {
+        const item = shopItems.find(i => i.id === id);
+        if (item) {
+          item.icon = icon;
+          item.title = title;
+          item.cost = cost;
+          item.desc = desc;
+          showToast(`✏️ 已更新【${title}】！`);
+        }
+      } else {
+        const newItem = {
+          id: 'item_' + Date.now(),
+          icon: icon,
+          title: title,
+          cost: cost,
+          desc: desc
+        };
+        shopItems.push(newItem);
+        showToast(`🎉 成功新增【${title}】！`);
+      }
+
+      safeStorageSet(SHOP_STORAGE_KEY, shopItems);
+      closeEditShopItemModal();
+      updateShopDisplay();
+    }
+
+    function deleteShopItemConfirm(itemId) {
+      const item = shopItems.find(i => i.id === itemId);
+      if (!item) return;
+
+      showConfirmModal({
+        icon: "🗑️",
+        title: "刪除禮品確認",
+        desc: `確定要刪除禮品【${item.title}】嗎？這項禮物將自小舖下架。`,
+        onConfirm: () => {
+          shopItems = shopItems.filter(i => i.id !== itemId);
+          safeStorageSet(SHOP_STORAGE_KEY, shopItems);
+          updateShopDisplay();
+          playWaterSound();
+          showToast(`🗑️ 已刪除【${item.title}】`);
+        }
+      });
+    }
+
+    function resetDefaultShopItemsConfirm() {
+      showConfirmModal({
+        icon: "🔄",
+        title: "恢復預設禮品確認",
+        desc: "確定要將禮物小舖清單重設為最新預設的三大禮品嗎？自訂的禮物將會被覆蓋。",
+        onConfirm: () => {
+          shopItems = JSON.parse(JSON.stringify(defaultShopItems));
+          safeStorageSet(SHOP_STORAGE_KEY, shopItems);
+          updateShopDisplay();
+          playWaterSound();
+          showToast("🔄 已恢復系統預設禮品清單！");
+        }
+      });
+    }
+
+    function redeemGift(itemId) {
+      const select = document.getElementById("shop-student-select");
+      const studentId = parseInt(select.value, 10);
+      const student = students.find(s => s.id === studentId);
+      const item = shopItems.find(i => i.id === itemId);
+
+      if (!student || !item || (student.stars || 0) < item.cost) return;
+
+      showConfirmModal({
+        icon: item.icon || "🎁",
+        title: "兌換確認",
+        desc: `確定要為 ${student.name} 使用 ${item.cost} 顆星星兌換【${item.title}】嗎？`,
+        onConfirm: () => {
+          student.stars -= item.cost;
+          safeStorageSet("forest_sel_students_v5", students);
+          renderStudents();
+          updateShopDisplay();
+          playAppleSound();
+          showToast(`🎉 ${student.name} 成功兌換【${item.title}】！`);
+        }
+      });
+    }
+
+    /* 通用防呆彈窗 */
+    let confirmAction = null;
+    function showConfirmModal({ icon, title, desc, onConfirm }) {
+      document.getElementById("confirm-modal-icon").textContent = icon || "⚠️";
+      document.getElementById("confirm-modal-title").textContent = title || "確認操作";
+      document.getElementById("confirm-modal-desc").textContent = desc || "確定要執行嗎？";
+      confirmAction = onConfirm;
+      document.getElementById("confirm-modal").classList.remove("hidden");
+    }
+
+    function closeConfirmModal(proceed) {
+      document.getElementById("confirm-modal").classList.add("hidden");
+      if (proceed && typeof confirmAction === 'function') confirmAction();
+      confirmAction = null;
+    }
+
+    function showToast(text) {
+      const container = document.getElementById("toast-container");
+      const msg = document.getElementById("toast-text");
+      if (!container || !msg) return;
+      msg.textContent = text;
+      container.classList.remove("opacity-0", "translate-y-4");
+      container.classList.add("opacity-100", "translate-y-0");
+      setTimeout(() => {
+        container.classList.remove("opacity-100", "translate-y-0");
+        container.classList.add("opacity-0", "translate-y-4");
+      }, 2300);
+    }
+
+    /* =========================================================
+       7. 雲端備份、期末進步報告、教師關懷筆記
+       ========================================================= */
+    function toggleCloudSyncModal() {
+      const modal = document.getElementById("cloud-sync-modal");
+      if (!modal) return;
+
+      const savedUrl = localStorage.getItem("forest_sel_gas_url") || "";
+      const input = document.getElementById("gas-url-input");
+      if (input) input.value = savedUrl;
+
+      updateGasStatusBadge(savedUrl);
+      modal.classList.remove("hidden");
+    }
+
+    function closeCloudSyncModal() {
+      const modal = document.getElementById("cloud-sync-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function updateGasStatusBadge(url) {
+      const badge = document.getElementById("gas-status-badge");
+      if (!badge) return;
+      if (url && url.startsWith("https://script.google.com")) {
+        badge.textContent = "已連結 GAS 雲端";
+        badge.className = "text-[10px] bg-emerald-100 text-emerald-900 font-black px-2.5 py-0.5 rounded-full border border-emerald-300";
+      } else {
+        badge.textContent = "尚未設定網址";
+        badge.className = "text-[10px] bg-slate-200 text-slate-700 font-black px-2.5 py-0.5 rounded-full border border-slate-300";
+      }
+    }
+
+    function saveGasUrl() {
+      const input = document.getElementById("gas-url-input");
+      if (!input) return;
+      const url = input.value.trim();
+      localStorage.setItem("forest_sel_gas_url", url);
+      updateGasStatusBadge(url);
+      showToast("💾 Google Apps Script Web App 網址已儲存！");
+    }
+
+    function uploadToCloud() {
+      const gasUrl = localStorage.getItem("forest_sel_gas_url") || "";
+      if (!gasUrl) {
+        showToast("⚠️ 請先設定並儲存有效的 Google Apps Script 網址！");
+        return;
+      }
+
+      showToast("☁️ 正在備份資料上傳至 Google 試算表 (包含照片與禮品)...");
+
+      const payload = {
+        action: "upload",
+        students: students,
+        shopItems: shopItems,
+        history: safeStorageGet("forest_sel_history", {}),
+        teacherNotes: safeStorageGet("forest_sel_teacher_notes", {}),
+        timestamp: new Date().toISOString()
+      };
+
+      fetch(gasUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") {
+          showToast("🎉 雲端備份成功！已同步至 Google 試算表！");
+        } else {
+          showToast("❌ 備份上傳失敗：" + (data.message || "未知錯誤"));
+        }
+      })
+      .catch(() => {
+        showToast("❌ 網路連線或 GAS 伺服器回應錯誤！");
+      });
+    }
+
+    function restoreFromCloud() {
+      const gasUrl = localStorage.getItem("forest_sel_gas_url") || "";
+      if (!gasUrl) {
+        showToast("⚠️ 請先設定並儲存有效的 Google Apps Script 網址！");
+        return;
+      }
+
+      showConfirmModal({
+        icon: "🔄",
+        title: "雲端還原確認",
+        desc: "從 Google 試算表還原將會覆蓋本機目前的名冊、照片與小舖禮品，確定要繼續嗎？",
+        onConfirm: () => {
+          showToast("☁️ 正在從雲端還原資料與學生照片...");
+          fetch(gasUrl + "?action=fetch")
+          .then(res => res.json())
+          .then(resData => {
+            if (resData.status === "success" && resData.data) {
+              const backup = resData.data;
+              if (backup.students && Array.isArray(backup.students)) {
+                students = backup.students;
+                safeStorageSet("forest_sel_students_v5", students);
+              }
+              if (backup.shopItems && Array.isArray(backup.shopItems)) {
+                shopItems = backup.shopItems;
+                safeStorageSet(SHOP_STORAGE_KEY, shopItems);
+              }
+              if (backup.history) safeStorageSet("forest_sel_history", backup.history);
+              if (backup.teacherNotes) safeStorageSet("forest_sel_teacher_notes", backup.teacherNotes);
+
+              renderStudents();
+              renderCareList();
+              showToast("🎉 成功從雲端還原名冊、相片與禮物清單！");
+            } else {
+              showToast("❌ 還原失敗：" + (resData.message || "雲端尚無備份"));
+            }
+          })
+          .catch(() => {
+            showToast("❌ 雲端請求失敗，請檢查網路或 GAS 部署權限。");
+          });
+        }
+      });
+    }
+
+    function exportLocalJSON() {
+      const backupObj = {
+        version: "v6",
+        exportTime: new Date().toISOString(),
+        students: students,
+        shopItems: shopItems,
+        history: safeStorageGet("forest_sel_history", {}),
+        teacherNotes: safeStorageGet("forest_sel_teacher_notes", {})
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      const dateStr = new Date().toISOString().slice(0, 10);
+      downloadAnchor.setAttribute("download", `森林學堂_SEL備份_${dateStr}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+
+      showToast("📥 本機 JSON 防呆備份檔已匯出下載！");
+    }
+
+    function importLocalJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const backupObj = JSON.parse(e.target.result);
+          if (!backupObj || !backupObj.students || !Array.isArray(backupObj.students)) {
+            showToast("⚠️ 檔案格式不符，非有效的特攻隊備份檔！");
+            return;
+          }
+
+          showConfirmModal({
+            icon: "📤",
+            title: "匯入備份檔案確認",
+            desc: `確定要匯入此備份檔 (${file.name}) 嗎？本機紀錄、相片與小舖禮品將被取代。`,
+            onConfirm: () => {
+              students = backupObj.students;
+              safeStorageSet("forest_sel_students_v5", students);
+              if (backupObj.shopItems && Array.isArray(backupObj.shopItems)) {
+                shopItems = backupObj.shopItems;
+                safeStorageSet(SHOP_STORAGE_KEY, shopItems);
+              }
+              if (backupObj.history) safeStorageSet("forest_sel_history", backupObj.history);
+              if (backupObj.teacherNotes) safeStorageSet("forest_sel_teacher_notes", backupObj.teacherNotes);
+
+              renderStudents();
+              renderCareList();
+              showToast("🎉 成功匯入本機 JSON 備份檔！");
+            }
+          });
+        } catch(err) {
+          showToast("❌ JSON 檔案讀取解析錯誤！");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    function toggleGasCodeViewer() {
+      const box = document.getElementById("gas-code-box");
+      if (box) box.classList.toggle("hidden");
+    }
+
+    function copyGasCode() {
+      const text = document.getElementById("gas-code-textarea").textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("📋 已複製 Google Apps Script 程式碼！");
+      }).catch(() => {
+        showToast("📋 請手動全選複製區域中的程式碼。");
+      });
+    }
+
+    /* 期末進步報告 */
+    function openTermReportModal() {
+      const modal = document.getElementById("term-report-modal");
+      if (!modal) return;
+
+      const select = document.getElementById("report-student-select");
+      if (select) {
+        select.innerHTML = `<option value="all">全班整體綜合報告</option>`;
+        students.forEach(s => {
+          const opt = document.createElement("option");
+          opt.value = s.id;
+          opt.textContent = `${s.surname}${s.name}`;
+          select.appendChild(opt);
+        });
+      }
+
+      updateTermReportDisplay();
+      modal.classList.remove("hidden");
+    }
+
+    function closeTermReportModal() {
+      const modal = document.getElementById("term-report-modal");
+      if (modal) modal.classList.add("hidden");
+    }
+
+    function updateTermReportDisplay() {
+      const select = document.getElementById("report-student-select");
+      const selectedValue = select ? select.value : "all";
+
+      const history = safeStorageGet("forest_sel_history", {});
+      const dates = Object.keys(history);
+
+      let targetStudents = students;
+      if (selectedValue !== "all") {
+        const sId = parseInt(selectedValue, 10);
+        targetStudents = students.filter(s => s.id === sId);
+      }
+
+      let totalAttendanceDays = 0;
+      let totalStarsSum = 0;
+      let readingCount = 0, homeworkCount = 0, tidyCount = 0, possibleTaskOpportunity = 0;
+      let moodCounts = { happy: 0, calm: 0, tired: 0, sad: 0, angry: 0 };
+
+      targetStudents.forEach(st => {
+        totalStarsSum += (st.lifetimeStars || st.stars || 0);
+      });
+
+      if (dates.length > 0) {
+        dates.forEach(d => {
+          let dayHasCheckin = false;
+          targetStudents.forEach(st => {
+            const rec = history[d]?.[st.id];
+            if (rec) {
+              dayHasCheckin = true;
+              possibleTaskOpportunity++;
+              if (rec.reading) readingCount++;
+              if (rec.homework) homeworkCount++;
+              if (rec.tidy) tidyCount++;
+              if (rec.mood && moodCounts[rec.mood] !== undefined) {
+                moodCounts[rec.mood]++;
+              }
+            }
+          });
+          if (dayHasCheckin) totalAttendanceDays++;
+        });
+      } else {
+        targetStudents.forEach(st => {
+          if (st.checkedIn) {
+            totalAttendanceDays = 1;
+            possibleTaskOpportunity++;
+            if (st.tasks?.reading) readingCount++;
+            if (st.tasks?.homework) homeworkCount++;
+            if (st.tasks?.tidy) tidyCount++;
+            if (st.mood && moodCounts[st.mood] !== undefined) moodCounts[st.mood]++;
+          }
+        });
+      }
+
+      const baseDenom = Math.max(1, possibleTaskOpportunity);
+      const rateReading = Math.round((readingCount / baseDenom) * 100);
+      const rateHomework = Math.round((homeworkCount / baseDenom) * 100);
+      const rateTidy = Math.round((tidyCount / baseDenom) * 100);
+      const avgTaskRate = Math.round((rateReading + rateHomework + rateTidy) / 3);
+
+      document.getElementById("report-attendance-days").textContent = `${totalAttendanceDays} 天`;
+      document.getElementById("report-total-stars").textContent = `${totalStarsSum} 顆`;
+      document.getElementById("report-avg-task-rate").textContent = `${avgTaskRate}%`;
+
+      document.getElementById("report-rate-reading").textContent = `${rateReading}%`;
+      document.getElementById("report-bar-reading").style.width = `${rateReading}%`;
+
+      document.getElementById("report-rate-homework").textContent = `${rateHomework}%`;
+      document.getElementById("report-bar-homework").style.width = `${rateHomework}%`;
+
+      document.getElementById("report-rate-tidy").textContent = `${rateTidy}%`;
+      document.getElementById("report-bar-tidy").style.width = `${rateTidy}%`;
+
+      document.getElementById("mood-count-happy").textContent = `${moodCounts.happy} 次`;
+      document.getElementById("mood-count-calm").textContent = `${moodCounts.calm} 次`;
+      document.getElementById("mood-count-tired").textContent = `${moodCounts.tired} 次`;
+      document.getElementById("mood-count-sad").textContent = `${moodCounts.sad} 次`;
+      document.getElementById("mood-count-angry").textContent = `${moodCounts.angry} 次`;
+
+      const qualitativeBox = document.getElementById("report-qualitative-text");
+      if (qualitativeBox) {
+        qualitativeBox.textContent = generateQualitativeRemark(selectedValue, targetStudents, avgTaskRate, rateReading, moodCounts);
+      }
+    }
+
+    function generateQualitativeRemark(selectedValue, targetStudents, avgTaskRate, rateReading, moodCounts) {
+      const totalMoods = moodCounts.happy + moodCounts.calm + moodCounts.tired + moodCounts.sad + moodCounts.angry;
+      const positiveRatio = totalMoods > 0 ? Math.round(((moodCounts.happy + moodCounts.calm) / totalMoods) * 100) : 100;
+
+      if (selectedValue === "all") {
+        return `【教育部學習扶助成果綜合評語】全班整體學習適應表現良好。本學期在「午後三任務」常規養成上達到平均 ${avgTaskRate}% 之達成率，其中讀本共讀參與度達 ${rateReading}%。在 SEL 情緒覺察方面，全班有 ${positiveRatio}% 之時段展現「開心」與「平靜」之穩定學習心態，學童能透過魔法大樹灌溉機制建立正向增強循環，整體學習自信與同儕互助氣氛顯著提升。`;
+      } else {
+        const student = targetStudents[0];
+        const name = `${student.surname}${student.name}`;
+        let evaluation = "優良";
+        if (avgTaskRate >= 80) evaluation = "表現極為優異，自律常規穩定，具備高度學習動機";
+        else if (avgTaskRate >= 50) evaluation = "呈現持續漸進成長，在老師鷹架同理引導下能順利完成午後任務";
+        else evaluation = "需持續給予關懷與學習鷹架支持，鼓勵建立規律學習步調";
+
+        return `【${name} 同學 - 學習扶助期末綜合評語】${name} 同學在本學期學習扶助過程中，綜合常規任務達成率為 ${avgTaskRate}%，共讀參與率達 ${rateReading}%。在 SEL 情緒表現上，正向情緒覺察比例為 ${positiveRatio}%，能學習自我辨識心理狀態。整體而言，${evaluation}。`;
+      }
+    }
+
+    function copyReportRemark() {
+      const text = document.getElementById("report-qualitative-text").textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("📋 已複製教育部格式質性評語！");
+      }).catch(() => {
+        showToast("📋 請手動選擇文字進行複製。");
+      });
+    }
+
+    function printTermReport() {
+      window.print();
+    }
+
+    function exportTermCSV() {
+      let history = safeStorageGet("forest_sel_history", {});
+      const dates = Object.keys(history).sort();
+
+      let csvContent = "\uFEFF日期,學生姓名,午後心情,簽到時間,讀本共讀,課堂任務,桌面整潔\n";
+
+      if (dates.length > 0) {
+        dates.forEach(d => {
+          students.forEach(st => {
+            const rec = history[d]?.[st.id];
+            if (rec) {
+              csvContent += `"${d}","${st.surname}${st.name}","${moodMeta[rec.mood]?.label || rec.mood || ''}","${rec.time || ''}","${rec.reading ? 'V' : '-'}","${rec.homework ? 'V' : '-'}","${rec.tidy ? 'V' : '-'}"\n`;
+            }
+          });
+        });
+      } else {
+        students.forEach(st => {
+          csvContent += `"${new Date().toISOString().slice(0,10)}","${st.surname}${st.name}","${moodMeta[st.mood]?.label || ''}","${st.time || ''}","${st.tasks?.reading ? 'V' : '-'}","${st.tasks?.homework ? 'V' : '-'}","${st.tasks?.tidy ? 'V' : '-'}"\n`;
+        });
+      }
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `森林學堂_學期進步評量_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      showToast("📥 進步分析 CSV 試算表已成功匯出！");
+    }
+
+    /* 教師關懷筆記 */
+    function toggleTeacherDrawer() {
+      const drawer = document.getElementById("teacher-drawer");
+      if (!drawer) return;
+      drawer.classList.toggle("translate-x-full");
+      renderCareList();
+    }
+
+    function renderCareList() {
+      const alertContainer = document.getElementById("care-student-list");
+      const notesContainer = document.getElementById("all-care-notes-list");
+      const badge = document.getElementById("care-count-badge");
+
+      const alertStudents = students.filter(s => s.checkedIn && (s.mood === 'tired' || s.mood === 'sad' || s.mood === 'angry'));
+
+      if (badge) {
+        if (alertStudents.length > 0) {
+          badge.textContent = alertStudents.length;
+          badge.classList.remove("hidden");
+        } else {
+          badge.classList.add("hidden");
+        }
+      }
+
+      if (alertContainer) {
+        alertContainer.innerHTML = "";
+        if (alertStudents.length === 0) {
+          alertContainer.innerHTML = `<div class="text-center py-3 text-slate-400 font-bold text-xs">目前全班心情安定放鬆 🌱</div>`;
+        } else {
+          alertStudents.forEach(st => {
+            const item = document.createElement("div");
+            item.className = "p-2.5 rounded-xl border border-rose-200 bg-rose-50 flex items-center justify-between text-xs";
+            item.innerHTML = `
+              <div class="flex items-center gap-2">
+                <span class="text-base">${st.mood === 'tired' ? '☁️' : (st.mood === 'sad' ? '🌧️' : '⚡')}</span>
+                <div>
+                  <div class="font-black text-slate-800">${st.surname}${st.name}</div>
+                  <div class="text-[10px] text-slate-500 font-bold">${st.time} 選擇「${moodMeta[st.mood]?.label || st.mood}」</div>
+                </div>
+              </div>
+              <span class="text-[10px] bg-rose-200 text-rose-950 font-black px-2 py-0.5 rounded-md">同理關懷</span>
+            `;
+            alertContainer.appendChild(item);
+          });
+        }
+      }
+
+      if (notesContainer) {
+        notesContainer.innerHTML = "";
+        const teacherNotes = safeStorageGet("forest_sel_teacher_notes", {});
+
+        students.forEach(st => {
+          const noteVal = teacherNotes[st.id] || "";
+          const row = document.createElement("div");
+          row.className = "p-2.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5";
+          row.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div class="font-black text-xs text-slate-800 flex items-center gap-1.5">
+                <span>${st.surname}${st.name}</span>
+                <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.2 rounded-full">
+                  ${st.checkedIn ? (moodMeta[st.mood]?.label || '已簽到') : '未簽到'}
+                </span>
+              </div>
+              <span class="text-[10px] text-amber-700 font-black">⭐ ${st.stars || 0} 顆</span>
+            </div>
+            <textarea oninput="saveCareNote(${st.id}, this.value)" placeholder="輸入針對 ${st.name} 的關懷觀察與輔導策略..." class="w-full p-2 text-xs rounded-xl border border-slate-300 bg-white font-bold text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none resize-none h-14 select-text">${noteVal}</textarea>
+          `;
+          notesContainer.appendChild(row);
+        });
+      }
+    }
+
+    function saveCareNote(studentId, noteText) {
+      let teacherNotes = safeStorageGet("forest_sel_teacher_notes", {});
+      teacherNotes[studentId] = noteText;
+      safeStorageSet("forest_sel_teacher_notes", teacherNotes);
+    }
+
+    function triggerResetDayWithGuard() {
+      showConfirmModal({
+        icon: "🔒",
+        title: "重置今日全班簽到與大樹？",
+        desc: "確定要將今天的魔法紅蘋果與任務印章重置為未簽到狀態嗎？（歷史進步數據將會保留）",
+        onConfirm: () => {
+          students.forEach(st => {
+            st.checkedIn = false;
+            st.mood = null;
+            st.time = null;
+            st.tasks = { reading: false, homework: false, tidy: false };
+          });
+          safeStorageSet("forest_sel_students_v5", students);
+          renderStudents();
+          renderCareList();
+          showToast("🔄 今日簽到與大樹果實已成功重置。");
+        }
+      });
+    }
+
+    /* 雙軌生命週期啟動 */
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", renderStudents);
+    } else {
+      renderStudents();
+    }
+  </script>
+</body>
+</html>
