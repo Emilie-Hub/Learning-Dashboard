@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>快樂森林學堂・SEL 學習特攻隊 (樹下共讀繪本版)</title>
+  <title>快樂森林學堂・SEL 學習特攻隊 (學期總表與每週關懷筆記版)</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Tone.js 音效庫 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-  <!-- Google Fonts: 思源黑體與圓潤手寫字型 -->
+  <!-- Google Fonts: 思源黑體與圓潤字型 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Noto+Sans+TC:wght@500;700;900&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
@@ -65,7 +65,7 @@
       box-shadow: 0 10px 0 #184222, 0 18px 28px rgba(24, 66, 34, 0.14);
     }
 
-    /* 森林綠晶亮遊戲按鈕 */
+    /* 森林綠遊戲按鈕 */
     .game-wood-btn {
       background: linear-gradient(180deg, #4AA05C 0%, #2E793F 60%, #1E5C2D 100%);
       border: 2.5px solid #113C1C;
@@ -403,9 +403,9 @@
           <span class="zhuyin-char"><span class="hanzi">學</span><span class="bpmf-col"><span>ㄒ</span><span>ㄩ</span><span>ㄝ</span><span class="tone">ˊ</span></span></span>
           <span class="zhuyin-char"><span class="hanzi">堂</span><span class="bpmf-col"><span>ㄊ</span><span>ㄤ</span><span class="tone">ˊ</span></span></span>
           <span class="text-xl md:text-2xl text-[#0B4019] font-black ml-2">SEL 學習特攻隊</span>
-          <span class="text-xs bg-[#E2F5E7] border-2 border-[#206935] text-[#0A3616] px-2.5 py-0.5 rounded-full ml-2 font-black">照片相片大頭貼版 📸</span>
+          <span class="text-xs bg-[#E2F5E7] border-2 border-[#206935] text-[#0A3616] px-2.5 py-0.5 rounded-full ml-2 font-black">期末總表與週記版 📋</span>
         </h1>
-        <p class="text-xs text-[#0C3B17] font-black mt-0.5">🍎 低年級觸控專用放大熱區 • 支援學生真實照片上傳與名牌展示</p>
+        <p class="text-xs text-[#0C3B17] font-black mt-0.5">🍎 主角級大相片 • 姓名靠右不換行 • 每週上課關懷追蹤與 SEL 歷史點陣保存</p>
       </div>
     </div>
 
@@ -442,7 +442,7 @@
 
       <!-- 教師關懷筆記 -->
       <button onclick="toggleTeacherDrawer()" class="game-wood-btn px-4 py-2 font-black text-xs md:text-sm relative">
-        <span>📋 關懷筆記</span>
+        <span>📋 週次關懷筆記</span>
         <span id="care-count-badge" class="hidden bg-rose-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-black border border-white">0</span>
       </button>
     </div>
@@ -1008,7 +1008,7 @@
             <div class="font-black text-emerald-950 text-sm flex items-center gap-1.5 mb-1">
               <span>🌐 雲端 Google 試算表同步</span>
             </div>
-            <p class="text-[11px] text-emerald-800 font-bold leading-relaxed">一鍵將全班名冊、包含學生照片、每日心情與星星數上傳備份至 Google 試算表。</p>
+            <p class="text-[11px] text-emerald-800 font-bold leading-relaxed">一鍵將全班名冊、包含學生照片、每週筆記、每日心情與星星數上傳備份至 Google 試算表。</p>
           </div>
           <div class="flex gap-2">
             <button onclick="uploadToCloud()" class="flex-1 game-wood-btn py-2 text-xs font-black flex items-center justify-center gap-1 shadow-xs">
@@ -1025,7 +1025,7 @@
             <div class="font-black text-amber-950 text-sm flex items-center gap-1.5 mb-1">
               <span>💾 本機防呆檔案備份</span>
             </div>
-            <p class="text-[11px] text-amber-800 font-bold leading-relaxed">無需網路，下載含照片之 .json 備份檔保存至隨身碟，或由備份檔還原名冊。</p>
+            <p class="text-[11px] text-amber-800 font-bold leading-relaxed">無需網路，下載含照片、週記與心情之 .json 備份檔保存至隨身碟，或由備份檔還原。</p>
           </div>
           <div class="flex gap-2">
             <button onclick="exportLocalJSON()" class="flex-1 game-gold-btn py-2 text-xs font-black flex items-center justify-center gap-1 shadow-xs">
@@ -1140,114 +1140,61 @@ function getOrCreateSheet(ss, name) {
     </div>
   </div>
 
-  <!-- 期末進步報告 Modal -->
+  <!-- 期末進步報告 Modal (支援三種視圖：全班總表含心情點陣、每週筆記總表、個別歷程卡) -->
   <div id="term-report-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 md:p-6 overflow-y-auto">
-    <div class="game-card-panel bg-white w-full max-w-3xl p-6 rounded-[36px] border-4 border-[#256D39] shadow-2xl relative max-h-[92vh] flex flex-col">
+    <div class="game-card-panel bg-white w-full max-w-5xl p-6 rounded-[36px] border-4 border-[#256D39] shadow-2xl relative max-h-[92vh] flex flex-col">
       <button onclick="closeTermReportModal()" class="absolute -top-3.5 -right-3.5 w-11 h-11 bg-rose-500 hover:bg-rose-600 text-white rounded-full font-black text-2xl flex items-center justify-center border-3 border-white shadow-lg active:scale-95 transition">✕</button>
 
-      <div class="flex items-center justify-between pb-3 border-b-2 border-emerald-100">
+      <div class="flex flex-wrap items-center justify-between pb-3 border-b-2 border-emerald-100 gap-2">
         <div class="flex items-center gap-2.5">
           <span class="text-3xl">📈</span>
           <div>
-            <h3 class="text-xl font-black text-[#06180C]">期末學扶 SEL & 學習進步評量報告</h3>
-            <p class="text-xs text-[#0F401B] font-black">綜整全班與個別學生出勤天數、任務達成率與 SEL 心情成長動態</p>
+            <h3 class="text-xl font-black text-[#06180C]">學期末 SEL 心情點與每週關懷紀錄總表</h3>
+            <p class="text-xs text-[#0F401B] font-black">綜整全學期每週上課出席、SEL 心情歷史點陣、常規任務達成率與教師每週筆記</p>
           </div>
         </div>
         
-        <select id="report-student-select" onchange="updateTermReportDisplay()" class="px-3 py-1.5 rounded-xl border-2 border-emerald-300 text-xs font-black bg-emerald-50 text-emerald-950 focus:outline-none">
-          <option value="all">全班整體綜合報告</option>
-        </select>
+        <div class="flex items-center gap-2">
+          <select id="report-view-tab" onchange="updateTermReportDisplay()" class="px-3 py-1.5 rounded-xl border-2 border-emerald-400 text-xs font-black bg-emerald-50 text-emerald-950 focus:outline-none">
+            <option value="summary">📊 全班期末總表 (含心情點陣)</option>
+            <option value="weekly_notes">📋 每週關懷紀錄總表</option>
+            <option value="individual">👤 個別隊員學期歷程卡</option>
+          </select>
+          <select id="report-student-select" onchange="updateTermReportDisplay()" class="hidden px-3 py-1.5 rounded-xl border-2 border-emerald-300 text-xs font-black bg-white text-emerald-950 focus:outline-none">
+          </select>
+        </div>
       </div>
 
       <div class="my-4 overflow-y-auto flex-1 pr-1 space-y-4 scrollbar-hidden">
-        <div class="grid grid-cols-3 gap-3 text-center">
-          <div class="bg-gradient-to-b from-amber-50 to-amber-100/80 p-3 rounded-2xl border-2 border-amber-300 shadow-xs">
-            <div class="text-[11px] text-amber-900 font-black mb-0.5">簽到與出勤天數</div>
-            <div id="report-attendance-days" class="text-xl font-black text-amber-950">0 天</div>
+        <!-- 核心指標卡片 -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+          <div class="bg-gradient-to-b from-amber-50 to-amber-100/80 p-2.5 rounded-2xl border-2 border-amber-300 shadow-xs">
+            <div class="text-[11px] text-amber-900 font-black mb-0.5">累計上課天數</div>
+            <div id="report-attendance-days" class="text-lg md:text-xl font-black text-amber-950">0 天</div>
           </div>
-          <div class="bg-gradient-to-b from-emerald-50 to-emerald-100/80 p-3 rounded-2xl border-2 border-emerald-300 shadow-xs">
-            <div class="text-[11px] text-emerald-900 font-black mb-0.5">累積獲得星星總數</div>
-            <div id="report-total-stars" class="text-xl font-black text-emerald-950">0 顆</div>
+          <div class="bg-gradient-to-b from-emerald-50 to-emerald-100/80 p-2.5 rounded-2xl border-2 border-emerald-300 shadow-xs">
+            <div class="text-[11px] text-emerald-900 font-black mb-0.5">全班獲得星星總數</div>
+            <div id="report-total-stars" class="text-lg md:text-xl font-black text-emerald-950">0 顆</div>
           </div>
-          <div class="bg-gradient-to-b from-sky-50 to-sky-100/80 p-3 rounded-2xl border-2 border-sky-300 shadow-xs">
-            <div class="text-[11px] text-sky-900 font-black mb-0.5">午後三任務平均達成率</div>
-            <div id="report-avg-task-rate" class="text-xl font-black text-sky-950">0%</div>
+          <div class="bg-gradient-to-b from-sky-50 to-sky-100/80 p-2.5 rounded-2xl border-2 border-sky-300 shadow-xs">
+            <div class="text-[11px] text-sky-900 font-black mb-0.5">午後三任務達成率</div>
+            <div id="report-avg-task-rate" class="text-lg md:text-xl font-black text-sky-950">0%</div>
           </div>
-        </div>
-
-        <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200 space-y-2.5">
-          <div class="text-xs font-black text-slate-800 flex items-center justify-between">
-            <span>📚 午後三大學習常規達成概況：</span>
-            <span class="text-[10px] text-slate-500 font-bold">讀本共讀 • 課堂任務 • 桌面整潔</span>
-          </div>
-
-          <div class="space-y-2 text-xs">
-            <div>
-              <div class="flex justify-between font-black text-emerald-900 mb-1">
-                <span>📖 讀本共讀印章率</span>
-                <span id="report-rate-reading">0%</span>
-              </div>
-              <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-                <div id="report-bar-reading" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between font-black text-amber-900 mb-1">
-                <span>✏️ 課堂任務印章率</span>
-                <span id="report-rate-homework">0%</span>
-              </div>
-              <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-                <div id="report-bar-homework" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-              </div>
-            </div>
-
-            <div>
-              <div class="flex justify-between font-black text-sky-900 mb-1">
-                <span>✨ 桌面整潔印章率</span>
-                <span id="report-rate-tidy">0%</span>
-              </div>
-              <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-                <div id="report-bar-tidy" class="bg-sky-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-              </div>
-            </div>
+          <div class="bg-gradient-to-b from-rose-50 to-rose-100/80 p-2.5 rounded-2xl border-2 border-rose-300 shadow-xs">
+            <div class="text-[11px] text-rose-900 font-black mb-0.5">每週關懷筆記累計</div>
+            <div id="report-notes-count" class="text-lg md:text-xl font-black text-rose-950">0 筆</div>
           </div>
         </div>
 
-        <div class="bg-emerald-50/70 p-4 rounded-2xl border-2 border-emerald-200">
-          <div class="text-xs font-black text-emerald-950 mb-2">🌱 SEL 午後心情自我覺察分佈圖：</div>
-          <div class="grid grid-cols-5 gap-2 text-center text-xs font-black">
-            <div class="bg-white p-2 rounded-xl border border-amber-300">
-              <div class="text-base mb-0.5">☀️</div>
-              <div class="text-[10px] text-amber-900">開心</div>
-              <div id="mood-count-happy" class="text-sm font-black text-amber-600">0 次</div>
-            </div>
-            <div class="bg-white p-2 rounded-xl border border-emerald-300">
-              <div class="text-base mb-0.5">🌱</div>
-              <div class="text-[10px] text-emerald-900">平靜</div>
-              <div id="mood-count-calm" class="text-sm font-black text-emerald-600">0 次</div>
-            </div>
-            <div class="bg-white p-2 rounded-xl border border-slate-300">
-              <div class="text-base mb-0.5">☁️</div>
-              <div class="text-[10px] text-slate-700">累了</div>
-              <div id="mood-count-tired" class="text-sm font-black text-slate-600">0 次</div>
-            </div>
-            <div class="bg-white p-2 rounded-xl border border-sky-300">
-              <div class="text-base mb-0.5">🌧️</div>
-              <div class="text-[10px] text-sky-900">難過</div>
-              <div id="mood-count-sad" class="text-sm font-black text-sky-600">0 次</div>
-            </div>
-            <div class="bg-white p-2 rounded-xl border border-rose-300">
-              <div class="text-base mb-0.5">⚡</div>
-              <div class="text-[10px] text-rose-900">生氣</div>
-              <div id="mood-count-angry" class="text-sm font-black text-rose-600">0 次</div>
-            </div>
-          </div>
-        </div>
+        <!-- 視圖容器 (動態切換) -->
+        <div id="report-dynamic-view" class="space-y-4"></div>
 
+        <!-- 教育部學扶成果格式質性進步評語 -->
         <div class="bg-white p-4 rounded-2xl border-2 border-emerald-300 shadow-xs">
           <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-black text-emerald-950">📝 教育部學扶成果格式質性進步評語：</span>
+            <span class="text-xs font-black text-emerald-950 flex items-center gap-1.5">
+              <span>📝 教育部學扶成果格式質性評語建議（期末填報用）：</span>
+            </span>
             <button onclick="copyReportRemark()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-2.5 py-1 rounded-xl text-xs font-black transition active:scale-95 shadow-xs">
               📋 一鍵複製質性評語
             </button>
@@ -1260,11 +1207,11 @@ function getOrCreateSheet(ss, name) {
 
       <div class="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
         <div class="flex gap-2">
-          <button onclick="exportTermCSV()" class="game-gold-btn px-4 py-2 text-xs font-black shadow-xs">
-            📥 匯出進步分析 CSV
+          <button onclick="exportTermCSV()" class="game-gold-btn px-4 py-2 text-xs font-black shadow-xs flex items-center gap-1">
+            <span>📥 匯出期末總表與歷程 CSV</span>
           </button>
-          <button onclick="printTermReport()" class="bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-400 px-4 py-2 rounded-2xl text-xs font-black shadow-xs active:scale-95 transition">
-            🖨️ 列印報告
+          <button onclick="printTermReport()" class="bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-400 px-4 py-2 rounded-2xl text-xs font-black shadow-xs active:scale-95 transition flex items-center gap-1">
+            <span>🖨️ 列印總表</span>
           </button>
         </div>
         <button onclick="closeTermReportModal()" class="game-wood-btn px-6 py-2 text-xs font-black shadow-xs">
@@ -1274,39 +1221,65 @@ function getOrCreateSheet(ss, name) {
     </div>
   </div>
 
-  <!-- 教師關懷筆記抽屜 -->
-  <div id="teacher-drawer" class="fixed inset-y-0 right-0 w-full max-w-md bg-white border-l-4 border-[#285E34] shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 flex flex-col p-5 md:p-6">
-    <div class="flex items-center justify-between pb-3.5 border-b-2 border-slate-100">
+  <!-- 教師關懷筆記抽屜 (支援選擇上課日期、學期週次與即時儲存) -->
+  <div id="teacher-drawer" class="fixed inset-y-0 right-0 w-full max-w-lg bg-white border-l-4 border-[#285E34] shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 flex flex-col p-4 md:p-5">
+    <div class="flex items-center justify-between pb-3 border-b-2 border-slate-100">
       <div class="flex items-center gap-2">
         <span class="text-2xl">📋</span>
-        <h3 class="text-xl font-black text-slate-800">教師 SEL 午後關懷筆記</h3>
+        <div>
+          <h3 class="text-lg font-black text-slate-800">教師每週上課關懷筆記</h3>
+          <p class="text-[11px] text-emerald-800 font-bold">每週隨堂紀錄，自動連動期末成果總表</p>
+        </div>
       </div>
-      <button onclick="toggleTeacherDrawer()" class="text-slate-400 hover:text-slate-700 text-2xl font-black">✕</button>
+      <button onclick="toggleTeacherDrawer()" class="text-slate-400 hover:text-slate-700 text-2xl font-black p-1">✕</button>
     </div>
 
-    <div class="bg-emerald-50 rounded-2xl p-3 border border-emerald-200 my-3 text-xs leading-relaxed text-emerald-950 font-bold">
-      <strong>💡 兒童心理學輔導小叮嚀：</strong><br>
-      低年級學扶孩子若呈現「累了」或「生氣」，多源於課後注意力消耗與挫折防衛。先給予溫柔同理，再引導共讀，能顯著提升安適感。
-    </div>
-
-    <div class="my-2">
-      <div class="text-xs font-black text-rose-900 mb-1.5 flex items-center gap-1">
-        <span>🚨 今日優先關懷隊員 (情緒提醒)：</span>
+    <!-- 週次與日期選擇工具列 -->
+    <div class="bg-gradient-to-r from-emerald-50 via-emerald-100/60 to-emerald-50 rounded-2xl p-3 border-2 border-emerald-300 my-2.5">
+      <div class="grid grid-cols-2 gap-2 mb-2">
+        <div>
+          <label class="block text-[11px] font-black text-emerald-950 mb-1">📅 上課日期：</label>
+          <input type="date" id="drawer-note-date" onchange="onDrawerDateOrWeekChange()" class="w-full px-2 py-1.5 text-xs font-black rounded-xl border border-emerald-300 bg-white outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+        <div>
+          <label class="block text-[11px] font-black text-emerald-950 mb-1">🗓️ 學期週次：</label>
+          <select id="drawer-note-week" onchange="onDrawerDateOrWeekChange()" class="w-full px-2 py-1.5 text-xs font-black rounded-xl border border-emerald-300 bg-white outline-none focus:ring-2 focus:ring-emerald-500">
+            <!-- 1 ~ 21 週動態生成 -->
+          </select>
+        </div>
       </div>
-      <div id="care-student-list" class="space-y-2 max-h-36 overflow-y-auto pr-1 scrollbar-hidden"></div>
+      <div class="flex items-center justify-between text-[11px] text-emerald-900 font-bold">
+        <span id="drawer-week-status-label">💡 正記錄第 1 週筆記</span>
+        <button onclick="openTermReportModalWithTab('weekly_notes')" class="text-emerald-800 hover:text-emerald-950 underline underline-offset-2 font-black">
+          檢視期末筆記總表 ↗
+        </button>
+      </div>
     </div>
 
-    <div class="flex-1 overflow-y-auto space-y-3 my-2 pr-1 scrollbar-hidden">
-      <div class="text-xs font-black text-slate-700">全班隊員個別化關懷備忘錄 (隨填即存)：</div>
+    <!-- 今日需優先關懷提醒 (情緒提醒) -->
+    <div class="my-1.5">
+      <div class="text-xs font-black text-rose-900 mb-1 flex items-center justify-between">
+        <span class="flex items-center gap-1">🚨 本日優先關懷隊員 (情緒雷達)：</span>
+        <span id="drawer-alert-count" class="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full font-black border border-rose-300">0 位</span>
+      </div>
+      <div id="care-student-list" class="space-y-1.5 max-h-28 overflow-y-auto pr-1 scrollbar-hidden"></div>
+    </div>
+
+    <!-- 全班隊員個別化關懷備忘錄 (隨填即存) -->
+    <div class="flex-1 overflow-y-auto space-y-2.5 my-2 pr-1 scrollbar-hidden">
+      <div class="flex items-center justify-between text-xs font-black text-slate-700">
+        <span>隊員個別上課觀察與輔導紀錄：</span>
+        <span class="text-[10px] text-emerald-700 font-bold">✅ 輸入即自動保存</span>
+      </div>
       <div id="all-care-notes-list" class="space-y-2.5"></div>
     </div>
 
     <div class="pt-3 border-t border-slate-100 flex gap-2">
-      <button onclick="triggerResetDayWithGuard()" class="flex-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-black py-2.5 rounded-2xl text-xs transition flex items-center justify-center gap-1 shadow-xs active:scale-95">
+      <button onclick="triggerResetDayWithGuard()" class="flex-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-black py-2 rounded-2xl text-xs transition flex items-center justify-center gap-1 shadow-xs active:scale-95">
         <span>🔒 重置今日簽到 (防呆)</span>
       </button>
-      <button onclick="toggleTeacherDrawer()" class="flex-1 game-wood-btn py-2.5 text-xs font-black shadow-xs">
-        收合筆記
+      <button onclick="toggleTeacherDrawer()" class="flex-1 game-wood-btn py-2 text-xs font-black shadow-xs">
+        完成收合
       </button>
     </div>
   </div>
@@ -1458,7 +1431,7 @@ function getOrCreateSheet(ss, name) {
 
         let data = getZhuyin(ch);
 
-        // 依據教育部辭典標準：疊字第二字讀輕聲（例如：「星星」第二個「星」讀 ˙ㄒㄧㄥ）
+        // 疊字第二字輕聲（如「星星」第二個「星」為 ˙ㄒㄧㄥ）
         if (ch === "星" && i > 0 && text[i - 1] === "星") {
           data = { bpmf: ["ㄒ", "ㄧ", "ㄥ"], tone: "˙" };
         } else if (i > 0 && ch === text[i - 1] && (ch === "朋" || ch === "了")) {
@@ -2278,13 +2251,30 @@ function getOrCreateSheet(ss, name) {
       if (!student) return;
 
       const now = new Date();
+      const dateKey = now.toISOString().slice(0, 10);
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const currentWeek = calculateSemesterWeek(now);
 
       student.checkedIn = true;
       student.mood = moodKey;
       student.time = timeStr;
       student.stars = (student.stars || 0) + 1;
       student.lifetimeStars = (student.lifetimeStars || 0) + 1;
+
+      // 儲存至歷史資料庫 (以日期與學生為索引，保存心情與任務)
+      let history = safeStorageGet("forest_sel_history", {});
+      if (!history[dateKey]) history[dateKey] = {};
+      history[dateKey][student.id] = {
+        date: dateKey,
+        week: currentWeek,
+        time: timeStr,
+        mood: moodKey,
+        reading: !!student.tasks?.reading,
+        homework: !!student.tasks?.homework,
+        tidy: !!student.tasks?.tidy,
+        stars: student.stars || 0
+      };
+      safeStorageSet("forest_sel_history", history);
 
       safeStorageSet("forest_sel_students_v5", students);
       closeMoodModal();
@@ -2311,6 +2301,16 @@ function getOrCreateSheet(ss, name) {
         playWaterSound();
       }
 
+      // 同步更新當日歷史紀錄
+      const now = new Date();
+      const dateKey = now.toISOString().slice(0, 10);
+      let history = safeStorageGet("forest_sel_history", {});
+      if (history[dateKey] && history[dateKey][student.id]) {
+        history[dateKey][student.id][taskKey] = student.tasks[taskKey];
+        history[dateKey][student.id].stars = student.stars || 0;
+        safeStorageSet("forest_sel_history", history);
+      }
+
       safeStorageSet("forest_sel_students_v5", students);
       renderStudents();
     }
@@ -2321,12 +2321,30 @@ function getOrCreateSheet(ss, name) {
         title: "一鍵全員蓋章確認",
         desc: "確定要為全班隊員點亮今日所有午後任務印章嗎？這將為每項未完成任務各累積 1 顆星星！",
         onConfirm: () => {
+          const now = new Date();
+          const dateKey = now.toISOString().slice(0, 10);
+          const currentWeek = calculateSemesterWeek(now);
+          let history = safeStorageGet("forest_sel_history", {});
+          if (!history[dateKey]) history[dateKey] = {};
+
           students.forEach(s => {
             if (!s.tasks) s.tasks = {};
             if (!s.tasks.reading) { s.tasks.reading = true; s.stars = (s.stars||0)+1; s.lifetimeStars = (s.lifetimeStars||0)+1; }
             if (!s.tasks.homework) { s.tasks.homework = true; s.stars = (s.stars||0)+1; s.lifetimeStars = (s.lifetimeStars||0)+1; }
-            if (!s.tasks.tidy) { s.tasks.tidy = true; s.stars = (s.stars||0)+1; s.lifetimeStars = (s.lifetimeStars||0)+1; }
+            if (!s.tasks.tidy) { s.tasks.tidy = true; s.stars = (s.tasks||0)+1; s.lifetimeStars = (s.lifetimeStars||0)+1; }
+
+            history[dateKey][s.id] = {
+              date: dateKey,
+              week: currentWeek,
+              time: s.time || "16:00",
+              mood: s.mood || "happy",
+              reading: true,
+              homework: true,
+              tidy: true,
+              stars: s.stars || 0
+            };
           });
+          safeStorageSet("forest_sel_history", history);
           safeStorageSet("forest_sel_students_v5", students);
           renderStudents();
           playAppleSound();
@@ -2682,7 +2700,7 @@ function getOrCreateSheet(ss, name) {
     }
 
     /* =========================================================
-       7. 雲端備份、期末進步報告、教師關懷筆記
+       7. 雲端備份與本機防呆 JSON 還原
        ========================================================= */
     function toggleCloudSyncModal() {
       const modal = document.getElementById("cloud-sync-modal");
@@ -2729,14 +2747,14 @@ function getOrCreateSheet(ss, name) {
         return;
       }
 
-      showToast("☁️ 正在備份資料上傳至 Google 試算表 (包含照片與禮品)...");
+      showToast("☁️ 正在備份資料上傳至 Google 試算表 (包含照片、每週筆記與禮品)...");
 
       const payload = {
         action: "upload",
         students: students,
         shopItems: shopItems,
         history: safeStorageGet("forest_sel_history", {}),
-        teacherNotes: safeStorageGet("forest_sel_teacher_notes", {}),
+        weeklyNotes: safeStorageGet("forest_sel_weekly_notes_v2", {}),
         timestamp: new Date().toISOString()
       };
 
@@ -2768,7 +2786,7 @@ function getOrCreateSheet(ss, name) {
       showConfirmModal({
         icon: "🔄",
         title: "雲端還原確認",
-        desc: "從 Google 試算表還原將會覆蓋本機目前的名冊、照片與小舖禮品，確定要繼續嗎？",
+        desc: "從 Google 試算表還原將會覆蓋本機目前的名冊、照片、每週筆記與小舖禮品，確定要繼續嗎？",
         onConfirm: () => {
           showToast("☁️ 正在從雲端還原資料與學生照片...");
           fetch(gasUrl + "?action=fetch")
@@ -2785,11 +2803,11 @@ function getOrCreateSheet(ss, name) {
                 safeStorageSet(SHOP_STORAGE_KEY, shopItems);
               }
               if (backup.history) safeStorageSet("forest_sel_history", backup.history);
-              if (backup.teacherNotes) safeStorageSet("forest_sel_teacher_notes", backup.teacherNotes);
+              if (backup.weeklyNotes) safeStorageSet("forest_sel_weekly_notes_v2", backup.weeklyNotes);
 
               renderStudents();
               renderCareList();
-              showToast("🎉 成功從雲端還原名冊、相片與禮物清單！");
+              showToast("🎉 成功從雲端還原名冊、相片、每週筆記與禮物清單！");
             } else {
               showToast("❌ 還原失敗：" + (resData.message || "雲端尚無備份"));
             }
@@ -2803,19 +2821,19 @@ function getOrCreateSheet(ss, name) {
 
     function exportLocalJSON() {
       const backupObj = {
-        version: "v6",
+        version: "v7_weekly_notes",
         exportTime: new Date().toISOString(),
         students: students,
         shopItems: shopItems,
         history: safeStorageGet("forest_sel_history", {}),
-        teacherNotes: safeStorageGet("forest_sel_teacher_notes", {})
+        weeklyNotes: safeStorageGet("forest_sel_weekly_notes_v2", {})
       };
 
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
       const dateStr = new Date().toISOString().slice(0, 10);
-      downloadAnchor.setAttribute("download", `森林學堂_SEL備份_${dateStr}.json`);
+      downloadAnchor.setAttribute("download", `森林學堂_SEL完整備份_${dateStr}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -2839,7 +2857,7 @@ function getOrCreateSheet(ss, name) {
           showConfirmModal({
             icon: "📤",
             title: "匯入備份檔案確認",
-            desc: `確定要匯入此備份檔 (${file.name}) 嗎？本機紀錄、相片與小舖禮品將被取代。`,
+            desc: `確定要匯入此備份檔 (${file.name}) 嗎？本機紀錄、相片、每週筆記將被取代。`,
             onConfirm: () => {
               students = backupObj.students;
               safeStorageSet("forest_sel_students_v5", students);
@@ -2848,7 +2866,7 @@ function getOrCreateSheet(ss, name) {
                 safeStorageSet(SHOP_STORAGE_KEY, shopItems);
               }
               if (backupObj.history) safeStorageSet("forest_sel_history", backupObj.history);
-              if (backupObj.teacherNotes) safeStorageSet("forest_sel_teacher_notes", backupObj.teacherNotes);
+              if (backupObj.weeklyNotes) safeStorageSet("forest_sel_weekly_notes_v2", backupObj.weeklyNotes);
 
               renderStudents();
               renderCareList();
@@ -2877,19 +2895,180 @@ function getOrCreateSheet(ss, name) {
       });
     }
 
-    /* 期末進步報告 */
+    /* =========================================================
+       8. 教師每週關懷筆記與期末學期總表
+       ========================================================= */
+
+    // 智能推算學期週次（以台灣學制為基準：8/31 ~ 1/20 第 1 學期、2/11 ~ 6/30 第 2 學期）
+    function calculateSemesterWeek(dateObj = new Date()) {
+      const year = dateObj.getFullYear();
+      const month = dateObj.getMonth() + 1; // 1 ~ 12
+      let semesterStartDate;
+
+      if (month >= 8 || month === 1) {
+        const startYear = month === 1 ? year - 1 : year;
+        semesterStartDate = new Date(startYear, 7, 30); // 8/30 基準
+      } else {
+        semesterStartDate = new Date(year, 1, 11); // 2/11 基準
+      }
+
+      const diffTime = dateObj.getTime() - semesterStartDate.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      const week = Math.max(1, Math.min(21, Math.floor(diffDays / 7) + 1));
+      return week;
+    }
+
+    // 初始化教師抽屜週次選單 (1 ~ 21 週)
+    function initDrawerWeekSelect() {
+      const select = document.getElementById("drawer-note-week");
+      if (!select || select.options.length > 0) return;
+      for (let w = 1; w <= 21; w++) {
+        const opt = document.createElement("option");
+        opt.value = w;
+        opt.textContent = `第 ${w} 週 (上課週)`;
+        select.appendChild(opt);
+      }
+    }
+
+    function toggleTeacherDrawer() {
+      const drawer = document.getElementById("teacher-drawer");
+      if (!drawer) return;
+      initDrawerWeekSelect();
+
+      // 初始化當日日期與推薦週次
+      const dateInput = document.getElementById("drawer-note-date");
+      const weekSelect = document.getElementById("drawer-note-week");
+      if (dateInput && !dateInput.value) {
+        const todayStr = new Date().toISOString().slice(0, 10);
+        dateInput.value = todayStr;
+      }
+      if (weekSelect && !weekSelect.value) {
+        weekSelect.value = calculateSemesterWeek(new Date(dateInput.value || Date.now()));
+      }
+
+      drawer.classList.toggle("translate-x-full");
+      renderCareList();
+    }
+
+    function onDrawerDateOrWeekChange() {
+      const weekSelect = document.getElementById("drawer-note-week");
+      const label = document.getElementById("drawer-week-status-label");
+      if (label && weekSelect) {
+        label.textContent = `💡 正檢視/記錄第 ${weekSelect.value} 週筆記`;
+      }
+      renderCareList();
+    }
+
+    function renderCareList() {
+      const alertContainer = document.getElementById("care-student-list");
+      const notesContainer = document.getElementById("all-care-notes-list");
+      const badge = document.getElementById("care-count-badge");
+      const alertCountSpan = document.getElementById("drawer-alert-count");
+
+      const alertStudents = students.filter(s => s.checkedIn && (s.mood === 'tired' || s.mood === 'sad' || s.mood === 'angry'));
+
+      if (badge) {
+        if (alertStudents.length > 0) {
+          badge.textContent = alertStudents.length;
+          badge.classList.remove("hidden");
+        } else {
+          badge.classList.add("hidden");
+        }
+      }
+      if (alertCountSpan) {
+        alertCountSpan.textContent = `${alertStudents.length} 位`;
+      }
+
+      if (alertContainer) {
+        alertContainer.innerHTML = "";
+        if (alertStudents.length === 0) {
+          alertContainer.innerHTML = `<div class="text-center py-2.5 text-slate-400 font-bold text-xs bg-emerald-50/60 rounded-xl border border-emerald-200">目前全班心情安定放鬆，無特殊情緒警戒 🌱</div>`;
+        } else {
+          alertStudents.forEach(st => {
+            const item = document.createElement("div");
+            item.className = "p-2 rounded-xl border border-rose-200 bg-rose-50/90 flex items-center justify-between text-xs";
+            item.innerHTML = `
+              <div class="flex items-center gap-2">
+                <span class="text-base">${st.mood === 'tired' ? '☁️' : (st.mood === 'sad' ? '🌧️' : '⚡')}</span>
+                <div>
+                  <div class="font-black text-slate-800">${st.surname}${st.name}</div>
+                  <div class="text-[10px] text-slate-500 font-bold">${st.time || '今日'} 選擇「${moodMeta[st.mood]?.label || st.mood}」</div>
+                </div>
+              </div>
+              <span class="text-[10px] bg-rose-200 text-rose-950 font-black px-2 py-0.5 rounded-md">優先同理</span>
+            `;
+            alertContainer.appendChild(item);
+          });
+        }
+      }
+
+      if (notesContainer) {
+        notesContainer.innerHTML = "";
+        const weeklyNotes = safeStorageGet("forest_sel_weekly_notes_v2", {});
+        const weekSelect = document.getElementById("drawer-note-week");
+        const selectedWeek = weekSelect ? weekSelect.value : calculateSemesterWeek();
+
+        students.forEach(st => {
+          const studentWeekRecord = weeklyNotes[st.id]?.[selectedWeek] || {};
+          const noteVal = typeof studentWeekRecord === 'string' ? studentWeekRecord : (studentWeekRecord.text || "");
+
+          const row = document.createElement("div");
+          row.className = "p-2.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5 transition hover:border-emerald-300";
+          row.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div class="font-black text-xs text-slate-800 flex items-center gap-1.5">
+                <span>#${st.slotIndex} ${st.surname}${st.name}</span>
+                <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.2 rounded-full">
+                  ${st.checkedIn ? (moodMeta[st.mood]?.label || '已簽到') : '今日未簽到'}
+                </span>
+              </div>
+              <span class="text-[10px] text-amber-800 font-black">第 ${selectedWeek} 週紀錄</span>
+            </div>
+            <textarea oninput="saveWeeklyCareNote(${st.id}, ${selectedWeek}, this.value)" placeholder="輸入第 ${selectedWeek} 週針對 ${st.name} 的上課專注、閱讀進展與情緒關懷觀察..." class="w-full p-2 text-xs rounded-xl border border-slate-300 bg-white font-bold text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none resize-none h-16 select-text leading-relaxed">${noteVal}</textarea>
+          `;
+          notesContainer.appendChild(row);
+        });
+      }
+    }
+
+    function saveWeeklyCareNote(studentId, week, noteText) {
+      let weeklyNotes = safeStorageGet("forest_sel_weekly_notes_v2", {});
+      if (!weeklyNotes[studentId]) weeklyNotes[studentId] = {};
+      
+      const dateInput = document.getElementById("drawer-note-date");
+      const noteDate = dateInput ? dateInput.value : new Date().toISOString().slice(0, 10);
+
+      weeklyNotes[studentId][week] = {
+        date: noteDate,
+        text: noteText,
+        updatedAt: new Date().toISOString()
+      };
+
+      safeStorageSet("forest_sel_weekly_notes_v2", weeklyNotes);
+    }
+
+    function openTermReportModalWithTab(tabName) {
+      openTermReportModal();
+      const tabSelect = document.getElementById("report-view-tab");
+      if (tabSelect) {
+        tabSelect.value = tabName;
+        updateTermReportDisplay();
+      }
+    }
+
+    /* 期末進步報告與全學期總表 */
     function openTermReportModal() {
       const modal = document.getElementById("term-report-modal");
       if (!modal) return;
 
-      const select = document.getElementById("report-student-select");
-      if (select) {
-        select.innerHTML = `<option value="all">全班整體綜合報告</option>`;
+      const studentSelect = document.getElementById("report-student-select");
+      if (studentSelect) {
+        studentSelect.innerHTML = "";
         students.forEach(s => {
           const opt = document.createElement("option");
           opt.value = s.id;
           opt.textContent = `${s.surname}${s.name}`;
-          select.appendChild(opt);
+          studentSelect.appendChild(opt);
         });
       }
 
@@ -2903,105 +3082,370 @@ function getOrCreateSheet(ss, name) {
     }
 
     function updateTermReportDisplay() {
-      const select = document.getElementById("report-student-select");
-      const selectedValue = select ? select.value : "all";
+      const tabSelect = document.getElementById("report-view-tab");
+      const currentTab = tabSelect ? tabSelect.value : "summary";
+      const studentSelect = document.getElementById("report-student-select");
+      const dynamicView = document.getElementById("report-dynamic-view");
 
-      const history = safeStorageGet("forest_sel_history", {});
-      const dates = Object.keys(history);
-
-      let targetStudents = students;
-      if (selectedValue !== "all") {
-        const sId = parseInt(selectedValue, 10);
-        targetStudents = students.filter(s => s.id === sId);
+      if (studentSelect) {
+        if (currentTab === "individual") {
+          studentSelect.classList.remove("hidden");
+        } else {
+          studentSelect.classList.add("hidden");
+        }
       }
 
-      let totalAttendanceDays = 0;
-      let totalStarsSum = 0;
-      let readingCount = 0, homeworkCount = 0, tidyCount = 0, possibleTaskOpportunity = 0;
-      let moodCounts = { happy: 0, calm: 0, tired: 0, sad: 0, angry: 0 };
+      const history = safeStorageGet("forest_sel_history", {});
+      const weeklyNotes = safeStorageGet("forest_sel_weekly_notes_v2", {});
+      const dates = Object.keys(history).sort();
 
-      targetStudents.forEach(st => {
+      // 計算全班概況指標
+      let totalAttendanceDays = dates.length;
+      let totalStarsSum = 0;
+      let totalNotesCount = 0;
+      let totalReading = 0, totalHomework = 0, totalTidy = 0, totalTaskOpps = 0;
+      let classMoodStats = { happy: 0, calm: 0, tired: 0, sad: 0, angry: 0 };
+
+      students.forEach(st => {
         totalStarsSum += (st.lifetimeStars || st.stars || 0);
+        if (weeklyNotes[st.id]) {
+          Object.values(weeklyNotes[st.id]).forEach(item => {
+            const txt = typeof item === 'string' ? item : item.text;
+            if (txt && txt.trim()) totalNotesCount++;
+          });
+        }
       });
 
-      if (dates.length > 0) {
-        dates.forEach(d => {
-          let dayHasCheckin = false;
-          targetStudents.forEach(st => {
-            const rec = history[d]?.[st.id];
-            if (rec) {
-              dayHasCheckin = true;
-              possibleTaskOpportunity++;
-              if (rec.reading) readingCount++;
-              if (rec.homework) homeworkCount++;
-              if (rec.tidy) tidyCount++;
-              if (rec.mood && moodCounts[rec.mood] !== undefined) {
-                moodCounts[rec.mood]++;
-              }
+      dates.forEach(d => {
+        students.forEach(st => {
+          const rec = history[d]?.[st.id];
+          if (rec) {
+            totalTaskOpps++;
+            if (rec.reading) totalReading++;
+            if (rec.homework) totalHomework++;
+            if (rec.tidy) totalTidy++;
+            if (rec.mood && classMoodStats[rec.mood] !== undefined) {
+              classMoodStats[rec.mood]++;
             }
-          });
-          if (dayHasCheckin) totalAttendanceDays++;
+          }
         });
-      } else {
-        targetStudents.forEach(st => {
+      });
+
+      if (totalAttendanceDays === 0 && students.some(s => s.checkedIn)) {
+        totalAttendanceDays = 1;
+        students.forEach(st => {
           if (st.checkedIn) {
-            totalAttendanceDays = 1;
-            possibleTaskOpportunity++;
-            if (st.tasks?.reading) readingCount++;
-            if (st.tasks?.homework) homeworkCount++;
-            if (st.tasks?.tidy) tidyCount++;
-            if (st.mood && moodCounts[st.mood] !== undefined) moodCounts[st.mood]++;
+            totalTaskOpps++;
+            if (st.tasks?.reading) totalReading++;
+            if (st.tasks?.homework) totalHomework++;
+            if (st.tasks?.tidy) totalTidy++;
+            if (st.mood && classMoodStats[st.mood] !== undefined) classMoodStats[st.mood]++;
           }
         });
       }
 
-      const baseDenom = Math.max(1, possibleTaskOpportunity);
-      const rateReading = Math.round((readingCount / baseDenom) * 100);
-      const rateHomework = Math.round((homeworkCount / baseDenom) * 100);
-      const rateTidy = Math.round((tidyCount / baseDenom) * 100);
-      const avgTaskRate = Math.round((rateReading + rateHomework + rateTidy) / 3);
+      const baseDenom = Math.max(1, totalTaskOpps);
+      const avgTaskRate = Math.round(((totalReading + totalHomework + totalTidy) / (baseDenom * 3)) * 100);
 
       document.getElementById("report-attendance-days").textContent = `${totalAttendanceDays} 天`;
       document.getElementById("report-total-stars").textContent = `${totalStarsSum} 顆`;
       document.getElementById("report-avg-task-rate").textContent = `${avgTaskRate}%`;
+      document.getElementById("report-notes-count").textContent = `${totalNotesCount} 筆`;
 
-      document.getElementById("report-rate-reading").textContent = `${rateReading}%`;
-      document.getElementById("report-bar-reading").style.width = `${rateReading}%`;
+      if (!dynamicView) return;
 
-      document.getElementById("report-rate-homework").textContent = `${rateHomework}%`;
-      document.getElementById("report-bar-homework").style.width = `${rateHomework}%`;
-
-      document.getElementById("report-rate-tidy").textContent = `${rateTidy}%`;
-      document.getElementById("report-bar-tidy").style.width = `${rateTidy}%`;
-
-      document.getElementById("mood-count-happy").textContent = `${moodCounts.happy} 次`;
-      document.getElementById("mood-count-calm").textContent = `${moodCounts.calm} 次`;
-      document.getElementById("mood-count-tired").textContent = `${moodCounts.tired} 次`;
-      document.getElementById("mood-count-sad").textContent = `${moodCounts.sad} 次`;
-      document.getElementById("mood-count-angry").textContent = `${moodCounts.angry} 次`;
+      if (currentTab === "summary") {
+        renderClassSummaryView(dynamicView, history, dates, weeklyNotes);
+      } else if (currentTab === "weekly_notes") {
+        renderWeeklyNotesView(dynamicView, weeklyNotes);
+      } else if (currentTab === "individual") {
+        const selectedStudentId = parseInt(studentSelect.value, 10) || students[0].id;
+        renderIndividualStudentView(dynamicView, selectedStudentId, history, dates, weeklyNotes);
+      }
 
       const qualitativeBox = document.getElementById("report-qualitative-text");
       if (qualitativeBox) {
-        qualitativeBox.textContent = generateQualitativeRemark(selectedValue, targetStudents, avgTaskRate, rateReading, moodCounts);
+        qualitativeBox.textContent = generateComprehensiveRemark(currentTab, studentSelect?.value, avgTaskRate, classMoodStats, totalAttendanceDays);
       }
     }
 
-    function generateQualitativeRemark(selectedValue, targetStudents, avgTaskRate, rateReading, moodCounts) {
-      const totalMoods = moodCounts.happy + moodCounts.calm + moodCounts.tired + moodCounts.sad + moodCounts.angry;
-      const positiveRatio = totalMoods > 0 ? Math.round(((moodCounts.happy + moodCounts.calm) / totalMoods) * 100) : 100;
+    /* 視圖 1：全班期末總表 (包含每位學生心情點陣歷程與任務達成) */
+    function renderClassSummaryView(container, history, dates, weeklyNotes) {
+      const moodIcons = {
+        happy: '☀️ 開心',
+        calm: '🌱 平靜',
+        tired: '☁️ 累了',
+        sad: '🌧️ 難過',
+        angry: '⚡ 生氣'
+      };
 
-      if (selectedValue === "all") {
-        return `【教育部學習扶助成果綜合評語】全班整體學習適應表現良好。本學期在「午後三任務」常規養成上達到平均 ${avgTaskRate}% 之達成率，其中讀本共讀參與度達 ${rateReading}%。在 SEL 情緒覺察方面，全班有 ${positiveRatio}% 之時段展現「開心」與「平靜」之穩定學習心態，學童能透過魔法大樹灌溉機制建立正向增強循環，整體學習自信與同儕互助氣氛顯著提升。`;
-      } else {
-        const student = targetStudents[0];
-        const name = `${student.surname}${student.name}`;
-        let evaluation = "優良";
-        if (avgTaskRate >= 80) evaluation = "表現極為優異，自律常規穩定，具備高度學習動機";
-        else if (avgTaskRate >= 50) evaluation = "呈現持續漸進成長，在老師鷹架同理引導下能順利完成午後任務";
-        else evaluation = "需持續給予關懷與學習鷹架支持，鼓勵建立規律學習步調";
+      let tableRowsHtml = "";
+      students.forEach(st => {
+        let studentMoods = [];
+        let readingCount = 0, homeworkCount = 0, tidyCount = 0, dayCount = 0;
 
-        return `【${name} 同學 - 學習扶助期末綜合評語】${name} 同學在本學期學習扶助過程中，綜合常規任務達成率為 ${avgTaskRate}%，共讀參與率達 ${rateReading}%。在 SEL 情緒表現上，正向情緒覺察比例為 ${positiveRatio}%，能學習自我辨識心理狀態。整體而言，${evaluation}。`;
+        dates.forEach(d => {
+          const rec = history[d]?.[st.id];
+          if (rec) {
+            dayCount++;
+            if (rec.reading) readingCount++;
+            if (rec.homework) homeworkCount++;
+            if (rec.tidy) tidyCount++;
+            if (rec.mood) studentMoods.push(rec.mood);
+          }
+        });
+
+        if (dayCount === 0 && st.checkedIn) {
+          dayCount = 1;
+          if (st.tasks?.reading) readingCount++;
+          if (st.tasks?.homework) homeworkCount++;
+          if (st.tasks?.tidy) tidyCount++;
+          if (st.mood) studentMoods.push(st.mood);
+        }
+
+        const taskPercent = dayCount > 0 ? Math.round(((readingCount + homeworkCount + tidyCount) / (dayCount * 3)) * 100) : 0;
+        
+        let noteEntries = 0;
+        if (weeklyNotes[st.id]) {
+          Object.values(weeklyNotes[st.id]).forEach(item => {
+            const txt = typeof item === 'string' ? item : item.text;
+            if (txt && txt.trim()) noteEntries++;
+          });
+        }
+
+        let moodDotList = studentMoods.slice(-6).map(m => {
+          const colorMap = {
+            happy: 'bg-amber-100 text-amber-900 border-amber-300',
+            calm: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+            tired: 'bg-slate-100 text-slate-800 border-slate-300',
+            sad: 'bg-sky-100 text-sky-900 border-sky-300',
+            angry: 'bg-rose-100 text-rose-900 border-rose-300'
+          };
+          const iconSymbol = { happy: '☀️', calm: '🌱', tired: '☁️', sad: '🌧️', angry: '⚡' };
+          return `<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-black rounded-md border ${colorMap[m] || 'bg-slate-50 border-slate-200'}" title="${moodIcons[m] || m}">${iconSymbol[m] || '•'}</span>`;
+        }).join(" ");
+
+        if (!moodDotList) moodDotList = `<span class="text-[11px] text-slate-400 font-bold">尚無紀錄</span>`;
+
+        tableRowsHtml += `
+          <tr class="border-b border-slate-100 hover:bg-emerald-50/40 transition">
+            <td class="p-2.5 font-black text-slate-800 whitespace-nowrap">
+              <span class="inline-block w-6 text-emerald-800">#${st.slotIndex}</span>
+              <span>${st.surname}${st.name}</span>
+            </td>
+            <td class="p-2.5 text-center font-bold text-slate-700">${dayCount} 天</td>
+            <td class="p-2.5 text-center font-black text-amber-700">⭐ ${st.stars || 0}</td>
+            <td class="p-2.5 text-center font-black text-emerald-800">${taskPercent}%</td>
+            <td class="p-2.5">
+              <div class="flex flex-wrap items-center gap-1">${moodDotList}</div>
+            </td>
+            <td class="p-2.5 text-center font-black text-slate-700">
+              <span class="px-2 py-0.5 rounded-full text-xs ${noteEntries > 0 ? 'bg-emerald-100 text-emerald-900' : 'bg-slate-100 text-slate-500'}">
+                ${noteEntries} 週
+              </span>
+            </td>
+          </tr>
+        `;
+      });
+
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl border-2 border-emerald-200 overflow-hidden shadow-xs">
+          <div class="p-3 bg-emerald-50/80 border-b border-emerald-200 flex items-center justify-between text-xs font-black text-emerald-950">
+            <span>📋 全班特攻隊員學期歷程總表</span>
+            <span class="text-[11px] text-emerald-800 font-bold">心情點陣展示最近紀錄 (☀️開心 🌱平靜 ☁️累了 🌧️難過 ⚡生氣)</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-700 font-black">
+                <tr>
+                  <th class="p-2.5">姓名</th>
+                  <th class="p-2.5 text-center">出勤天數</th>
+                  <th class="p-2.5 text-center">目前星星</th>
+                  <th class="p-2.5 text-center">任務達成率</th>
+                  <th class="p-2.5">歷次心情動態點陣</th>
+                  <th class="p-2.5 text-center">關懷筆記</th>
+                </tr>
+              </thead>
+              <tbody>${tableRowsHtml}</tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    /* 視圖 2：每週關懷紀錄總表 (依週次 1~21 週彙整所有學生的教師筆記) */
+    function renderWeeklyNotesView(container, weeklyNotes) {
+      let weekCardsHtml = "";
+      
+      for (let w = 1; w <= 21; w++) {
+        let studentNotesInThisWeek = [];
+
+        students.forEach(st => {
+          const rec = weeklyNotes[st.id]?.[w];
+          if (rec) {
+            const noteText = typeof rec === 'string' ? rec : rec.text;
+            const noteDate = typeof rec === 'object' ? (rec.date || '') : '';
+            if (noteText && noteText.trim()) {
+              studentNotesInThisWeek.push({ student: st, text: noteText, date: noteDate });
+            }
+          }
+        });
+
+        if (studentNotesInThisWeek.length > 0) {
+          const studentItems = studentNotesInThisWeek.map(item => `
+            <div class="p-2.5 rounded-xl bg-white border border-emerald-200 shadow-2xs space-y-1">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-black text-emerald-950">#${item.student.slotIndex} ${item.student.surname}${item.student.name}</span>
+                <span class="text-[10px] text-slate-400 font-bold">${item.date || ''}</span>
+              </div>
+              <p class="text-xs text-slate-700 font-bold leading-relaxed whitespace-pre-wrap">${item.text}</p>
+            </div>
+          `).join("");
+
+          weekCardsHtml += `
+            <div class="p-3.5 bg-slate-50 rounded-2xl border-2 border-emerald-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <div class="font-black text-emerald-950 text-xs flex items-center gap-1.5">
+                  <span class="text-base">🗓️</span>
+                  <span>第 ${w} 週 上課關懷與學習輔導追蹤</span>
+                </div>
+                <span class="text-[10px] bg-emerald-100 text-emerald-900 font-black px-2 py-0.5 rounded-full border border-emerald-300">
+                  ${studentNotesInThisWeek.length} 位隊員紀錄
+                </span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">${studentItems}</div>
+            </div>
+          `;
+        }
       }
+
+      if (!weekCardsHtml) {
+        container.innerHTML = `
+          <div class="text-center py-12 bg-white rounded-2xl border-2 border-dashed border-slate-300 p-6">
+            <span class="text-3xl mb-2 block">📝</span>
+            <h4 class="text-sm font-black text-slate-700">目前尚無每週關懷筆記紀錄</h4>
+            <p class="text-xs text-slate-500 font-bold mt-1">
+              請點擊右上角的「📋 週次關懷筆記」，隨堂紀錄每位隊員的各週輔導筆記，系統將在此自動彙整成學期總表！
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="space-y-3">
+          <div class="bg-emerald-50/80 p-3 rounded-2xl border border-emerald-300 text-xs font-black text-emerald-950 flex items-center justify-between">
+            <span>📚 全學期每週關懷筆記彙總歷程（期末備查與親師溝通）：</span>
+            <button onclick="copyAllWeeklyNotes()" class="bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-400 px-2.5 py-1 rounded-xl text-[11px] font-black transition active:scale-95 shadow-xs">
+              📋 一鍵複製全學期週筆記
+            </button>
+          </div>
+          ${weekCardsHtml}
+        </div>
+      `;
+    }
+
+    /* 視圖 3：個別學生學期歷程卡 (含各週簽到日期、心情、任務與對應筆記) */
+    function renderIndividualStudentView(container, studentId, history, dates, weeklyNotes) {
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
+
+      const moodNames = { happy: '☀️ 開心', calm: '🌱 平靜', tired: '☁️ 累了', sad: '🌧️ 難過', angry: '⚡ 生氣' };
+
+      let logItemsHtml = "";
+      dates.forEach(d => {
+        const rec = history[d]?.[student.id];
+        if (rec) {
+          logItemsHtml += `
+            <div class="p-2.5 bg-white rounded-xl border border-slate-200 text-xs flex flex-wrap items-center justify-between gap-2 shadow-2xs">
+              <div class="flex items-center gap-2">
+                <span class="font-black text-slate-700 text-[11px]">${d}</span>
+                <span class="font-bold text-slate-500 text-[10px]">(第 ${rec.week || 1} 週)</span>
+                <span class="font-black px-2 py-0.5 rounded-full text-[11px] bg-emerald-50 border border-emerald-200 text-emerald-900">
+                  ${moodNames[rec.mood] || rec.mood || '簽到'}
+                </span>
+              </div>
+              <div class="flex items-center gap-3 font-bold text-slate-600 text-[11px]">
+                <span>共讀：${rec.reading ? '✅' : '⚪'}</span>
+                <span>任務：${rec.homework ? '✅' : '⚪'}</span>
+                <span>整潔：${rec.tidy ? '✅' : '⚪'}</span>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      let studentNotesHtml = "";
+      for (let w = 1; w <= 21; w++) {
+        const rec = weeklyNotes[student.id]?.[w];
+        if (rec) {
+          const txt = typeof rec === 'string' ? rec : rec.text;
+          const noteDate = typeof rec === 'object' ? (rec.date || '') : '';
+          if (txt && txt.trim()) {
+            studentNotesHtml += `
+              <div class="p-2.5 bg-amber-50/70 rounded-xl border border-amber-200 text-xs space-y-1">
+                <div class="flex justify-between font-black text-amber-950 text-[11px]">
+                  <span>第 ${w} 週關懷紀錄</span>
+                  <span class="text-slate-400 font-bold">${noteDate}</span>
+                </div>
+                <p class="text-slate-700 font-bold whitespace-pre-wrap">${txt}</p>
+              </div>
+            `;
+          }
+        }
+      }
+
+      container.innerHTML = `
+        <div class="bg-white p-4 rounded-2xl border-2 border-emerald-300 space-y-4 shadow-xs">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+            <div class="flex items-center gap-3">
+              <div class="w-14 h-14 rounded-2xl border-2 border-emerald-600 bg-white p-0.5 overflow-hidden flex items-center justify-center">
+                ${getStudentAvatarHtml(student)}
+              </div>
+              <div>
+                <h4 class="text-base font-black text-slate-800 flex items-center gap-1.5">
+                  <span>${student.surname}${student.name}</span>
+                  <span class="text-xs bg-amber-100 text-amber-950 px-2 py-0.5 rounded-full border border-amber-300 font-black">⭐ ${student.stars || 0} 顆</span>
+                </h4>
+                <p class="text-[11px] text-slate-500 font-bold mt-0.5">學號/座號：#${student.slotIndex} 號隊員</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 區塊 A：歷史簽到與心情動態歷程 -->
+          <div class="space-y-2">
+            <div class="text-xs font-black text-emerald-950 flex items-center gap-1">
+              <span>📅 上課出席與 SEL 心情歷程清單：</span>
+            </div>
+            <div class="max-h-48 overflow-y-auto space-y-1.5 pr-1 scrollbar-hidden">
+              ${logItemsHtml || '<div class="p-3 text-center text-slate-400 font-bold text-xs bg-slate-50 rounded-xl">尚無歷史簽到歷程</div>'}
+            </div>
+          </div>
+
+          <!-- 區塊 B：教師每週個別關懷筆記 -->
+          <div class="space-y-2 pt-2 border-t border-slate-100">
+            <div class="text-xs font-black text-amber-950 flex items-center gap-1">
+              <span>📝 歷週教師關懷輔導筆記：</span>
+            </div>
+            <div class="max-h-48 overflow-y-auto space-y-2 pr-1 scrollbar-hidden">
+              ${studentNotesHtml || '<div class="p-3 text-center text-slate-400 font-bold text-xs bg-slate-50 rounded-xl">尚無週次關懷筆記</div>'}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function generateComprehensiveRemark(currentTab, selectedStudentId, avgTaskRate, classMoodStats, totalAttendanceDays) {
+      const totalMoods = classMoodStats.happy + classMoodStats.calm + classMoodStats.tired + classMoodStats.sad + classMoodStats.angry;
+      const positiveRatio = totalMoods > 0 ? Math.round(((classMoodStats.happy + classMoodStats.calm) / totalMoods) * 100) : 100;
+
+      if (currentTab === "individual" && selectedStudentId) {
+        const student = students.find(s => s.id === parseInt(selectedStudentId, 10));
+        const name = student ? `${student.surname}${student.name}` : "學生";
+        return `【${name} 同學 - 學習扶助期末綜合評語】${name} 同學在本學期學習扶助中出勤穩定。在午後三任務（共讀、課堂任務與整潔）落實度良好，累計獲得 ${student?.stars || 0} 顆榮譽星星。在每週 SEL 情緒覺察上，能透過心情精靈即時表達自我感受。配合教師各週輔導鷹架支持，其學習專注力與課堂自信皆有明顯進步，建議下學期持續保持積極穩定的共讀節奏。`;
+      }
+
+      return `【教育部學習扶助成果綜合評語】全班本學期累積上課 ${totalAttendanceDays} 天，全學期午後三任務綜合常規達成率為 ${avgTaskRate}%。在 SEL 情緒覺察指標上，全班呈現穩定正向情緒（開心與平靜）之比例達 ${positiveRatio}%。透過每週上課關懷追蹤與手繪魔法大樹灌溉增強機制，學童能有效建立情緒覺察與常規自律，在閱讀理解及課堂參與度上均呈現顯著進步，整體學習氣氛溫暖且富同儕凝聚力。`;
     }
 
     function copyReportRemark() {
@@ -3013,28 +3457,63 @@ function getOrCreateSheet(ss, name) {
       });
     }
 
+    function copyAllWeeklyNotes() {
+      const weeklyNotes = safeStorageGet("forest_sel_weekly_notes_v2", {});
+      let content = "【快樂森林學堂・全學期每週關懷筆記總表】\n\n";
+
+      for (let w = 1; w <= 21; w++) {
+        let hasContent = false;
+        let weekText = `=== 第 ${w} 週 ===\n`;
+        students.forEach(st => {
+          const rec = weeklyNotes[st.id]?.[w];
+          if (rec) {
+            const txt = typeof rec === 'string' ? rec : rec.text;
+            const dt = typeof rec === 'object' ? (rec.date || '') : '';
+            if (txt && txt.trim()) {
+              hasContent = true;
+              weekText += `[${st.surname}${st.name}] (${dt}): ${txt}\n`;
+            }
+          }
+        });
+        if (hasContent) {
+          content += weekText + "\n";
+        }
+      }
+
+      navigator.clipboard.writeText(content).then(() => {
+        showToast("📋 全學期每週關懷筆記已複製至剪貼簿！");
+      }).catch(() => {
+        showToast("📋 複製失敗，請手動複製。");
+      });
+    }
+
     function printTermReport() {
       window.print();
     }
 
     function exportTermCSV() {
-      let history = safeStorageGet("forest_sel_history", {});
+      const history = safeStorageGet("forest_sel_history", {});
+      const weeklyNotes = safeStorageGet("forest_sel_weekly_notes_v2", {});
       const dates = Object.keys(history).sort();
 
-      let csvContent = "\uFEFF日期,學生姓名,午後心情,簽到時間,讀本共讀,課堂任務,桌面整潔\n";
+      let csvContent = "\uFEFF【期末歷程與上課紀錄總表】\n";
+      csvContent += "日期,學期週次,學生姓名,心情天氣,簽到時間,讀本共讀,課堂任務,桌面整潔,星星數量,該週教師關懷筆記\n";
 
       if (dates.length > 0) {
         dates.forEach(d => {
           students.forEach(st => {
             const rec = history[d]?.[st.id];
             if (rec) {
-              csvContent += `"${d}","${st.surname}${st.name}","${moodMeta[rec.mood]?.label || rec.mood || ''}","${rec.time || ''}","${rec.reading ? 'V' : '-'}","${rec.homework ? 'V' : '-'}","${rec.tidy ? 'V' : '-'}"\n`;
+              const weekNum = rec.week || 1;
+              const noteRec = weeklyNotes[st.id]?.[weekNum];
+              const noteText = (typeof noteRec === 'string' ? noteRec : noteRec?.text || '').replace(/"/g, '""');
+              csvContent += `"${d}","第${weekNum}週","${st.surname}${st.name}","${moodMeta[rec.mood]?.label || rec.mood || ''}","${rec.time || ''}","${rec.reading ? 'V' : '-'}","${rec.homework ? 'V' : '-'}","${rec.tidy ? 'V' : '-'}","${rec.stars || st.stars || 0}","${noteText}"\n`;
             }
           });
         });
       } else {
         students.forEach(st => {
-          csvContent += `"${new Date().toISOString().slice(0,10)}","${st.surname}${st.name}","${moodMeta[st.mood]?.label || ''}","${st.time || ''}","${st.tasks?.reading ? 'V' : '-'}","${st.tasks?.homework ? 'V' : '-'}","${st.tasks?.tidy ? 'V' : '-'}"\n`;
+          csvContent += `"${new Date().toISOString().slice(0,10)}","第1週","${st.surname}${st.name}","${moodMeta[st.mood]?.label || ''}","${st.time || ''}","${st.tasks?.reading ? 'V' : '-'}","${st.tasks?.homework ? 'V' : '-'}","${st.tasks?.tidy ? 'V' : '-'}","${st.stars || 0}",""\n`;
         });
       }
 
@@ -3042,97 +3521,19 @@ function getOrCreateSheet(ss, name) {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.setAttribute("href", url);
-      link.setAttribute("download", `森林學堂_學期進步評量_${new Date().toISOString().slice(0,10)}.csv`);
+      link.setAttribute("download", `森林學堂_期末完整歷程與關懷總表_${new Date().toISOString().slice(0,10)}.csv`);
       document.body.appendChild(link);
       link.click();
       link.remove();
 
-      showToast("📥 進步分析 CSV 試算表已成功匯出！");
-    }
-
-    /* 教師關懷筆記 */
-    function toggleTeacherDrawer() {
-      const drawer = document.getElementById("teacher-drawer");
-      if (!drawer) return;
-      drawer.classList.toggle("translate-x-full");
-      renderCareList();
-    }
-
-    function renderCareList() {
-      const alertContainer = document.getElementById("care-student-list");
-      const notesContainer = document.getElementById("all-care-notes-list");
-      const badge = document.getElementById("care-count-badge");
-
-      const alertStudents = students.filter(s => s.checkedIn && (s.mood === 'tired' || s.mood === 'sad' || s.mood === 'angry'));
-
-      if (badge) {
-        if (alertStudents.length > 0) {
-          badge.textContent = alertStudents.length;
-          badge.classList.remove("hidden");
-        } else {
-          badge.classList.add("hidden");
-        }
-      }
-
-      if (alertContainer) {
-        alertContainer.innerHTML = "";
-        if (alertStudents.length === 0) {
-          alertContainer.innerHTML = `<div class="text-center py-3 text-slate-400 font-bold text-xs">目前全班心情安定放鬆 🌱</div>`;
-        } else {
-          alertStudents.forEach(st => {
-            const item = document.createElement("div");
-            item.className = "p-2.5 rounded-xl border border-rose-200 bg-rose-50 flex items-center justify-between text-xs";
-            item.innerHTML = `
-              <div class="flex items-center gap-2">
-                <span class="text-base">${st.mood === 'tired' ? '☁️' : (st.mood === 'sad' ? '🌧️' : '⚡')}</span>
-                <div>
-                  <div class="font-black text-slate-800">${st.surname}${st.name}</div>
-                  <div class="text-[10px] text-slate-500 font-bold">${st.time} 選擇「${moodMeta[st.mood]?.label || st.mood}」</div>
-                </div>
-              </div>
-              <span class="text-[10px] bg-rose-200 text-rose-950 font-black px-2 py-0.5 rounded-md">同理關懷</span>
-            `;
-            alertContainer.appendChild(item);
-          });
-        }
-      }
-
-      if (notesContainer) {
-        notesContainer.innerHTML = "";
-        const teacherNotes = safeStorageGet("forest_sel_teacher_notes", {});
-
-        students.forEach(st => {
-          const noteVal = teacherNotes[st.id] || "";
-          const row = document.createElement("div");
-          row.className = "p-2.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5";
-          row.innerHTML = `
-            <div class="flex items-center justify-between">
-              <div class="font-black text-xs text-slate-800 flex items-center gap-1.5">
-                <span>${st.surname}${st.name}</span>
-                <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.2 rounded-full">
-                  ${st.checkedIn ? (moodMeta[st.mood]?.label || '已簽到') : '未簽到'}
-                </span>
-              </div>
-              <span class="text-[10px] text-amber-700 font-black">⭐ ${st.stars || 0} 顆</span>
-            </div>
-            <textarea oninput="saveCareNote(${st.id}, this.value)" placeholder="輸入針對 ${st.name} 的關懷觀察與輔導策略..." class="w-full p-2 text-xs rounded-xl border border-slate-300 bg-white font-bold text-slate-800 focus:ring-2 focus:ring-emerald-400 outline-none resize-none h-14 select-text">${noteVal}</textarea>
-          `;
-          notesContainer.appendChild(row);
-        });
-      }
-    }
-
-    function saveCareNote(studentId, noteText) {
-      let teacherNotes = safeStorageGet("forest_sel_teacher_notes", {});
-      teacherNotes[studentId] = noteText;
-      safeStorageSet("forest_sel_teacher_notes", teacherNotes);
+      showToast("📥 期末完整歷程與關懷總表 CSV 已成功匯出！");
     }
 
     function triggerResetDayWithGuard() {
       showConfirmModal({
         icon: "🔒",
         title: "重置今日全班簽到與大樹？",
-        desc: "確定要將今天的魔法紅蘋果與任務印章重置為未簽到狀態嗎？（歷史進步數據將會保留）",
+        desc: "確定要將今天的魔法紅蘋果與任務印章重置為未簽到狀態嗎？（全學期歷史心情點陣與每週關懷筆記皆會妥善保留）",
         onConfirm: () => {
           students.forEach(st => {
             st.checkedIn = false;
@@ -3143,7 +3544,7 @@ function getOrCreateSheet(ss, name) {
           safeStorageSet("forest_sel_students_v5", students);
           renderStudents();
           renderCareList();
-          showToast("🔄 今日簽到與大樹果實已成功重置。");
+          showToast("🔄 今日簽到與大樹果實已重置，歷史紀錄完整保存。");
         }
       });
     }
