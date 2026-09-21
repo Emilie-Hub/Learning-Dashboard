@@ -440,9 +440,9 @@
         <span>📈 期末進步報告</span>
       </button>
 
-      <!-- 教師關懷筆記 -->
+      <!-- 教師關懷筆記與教學日誌 -->
       <button onclick="toggleTeacherDrawer()" class="game-wood-btn px-4 py-2 font-black text-xs md:text-sm relative">
-        <span>📋 週次關懷筆記</span>
+        <span>📋 關懷筆記與教學日誌</span>
         <span id="care-count-badge" class="hidden bg-rose-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-black border border-white">0</span>
       </button>
     </div>
@@ -1157,7 +1157,8 @@ function getOrCreateSheet(ss, name) {
         <div class="flex items-center gap-2">
           <select id="report-view-tab" onchange="updateTermReportDisplay()" class="px-3 py-1.5 rounded-xl border-2 border-emerald-400 text-xs font-black bg-emerald-50 text-emerald-950 focus:outline-none">
             <option value="summary">📊 全班期末總表 (含心情點陣)</option>
-            <option value="weekly_notes">📋 每週關懷紀錄總表</option>
+            <option value="teaching_logs">📖 全學期教學日誌總表</option>
+            <option value="weekly_notes">📋 每週隊員關懷紀錄表</option>
             <option value="individual">👤 個別隊員學期歷程卡</option>
           </select>
           <select id="report-student-select" onchange="updateTermReportDisplay()" class="hidden px-3 py-1.5 rounded-xl border-2 border-emerald-300 text-xs font-black bg-white text-emerald-950 focus:outline-none">
@@ -1227,8 +1228,8 @@ function getOrCreateSheet(ss, name) {
       <div class="flex items-center gap-2">
         <span class="text-2xl">📋</span>
         <div>
-          <h3 class="text-lg font-black text-slate-800">教師每週上課關懷筆記</h3>
-          <p class="text-[11px] text-emerald-800 font-bold">每週隨堂紀錄，自動連動期末成果總表</p>
+          <h3 class="text-lg font-black text-slate-800">教師教學日誌與週次關懷筆記</h3>
+          <p class="text-[11px] text-emerald-800 font-bold">隨堂記錄教學進度與學生狀況，連動期末總表</p>
         </div>
       </div>
       <button onclick="toggleTeacherDrawer()" class="text-slate-400 hover:text-slate-700 text-2xl font-black p-1">✕</button>
@@ -1250,9 +1251,32 @@ function getOrCreateSheet(ss, name) {
       </div>
       <div class="flex items-center justify-between text-[11px] text-emerald-900 font-bold">
         <span id="drawer-week-status-label">💡 正記錄第 1 週筆記</span>
-        <button onclick="openTermReportModalWithTab('weekly_notes')" class="text-emerald-800 hover:text-emerald-950 underline underline-offset-2 font-black">
-          檢視期末筆記總表 ↗
+        <button onclick="openTermReportModalWithTab('teaching_logs')" class="text-emerald-800 hover:text-emerald-950 underline underline-offset-2 font-black">
+          檢視期末教學日誌總表 ↗
         </button>
+      </div>
+    </div>
+
+    <!-- 教師教學日誌面板 (當日上課進度與班級紀事) -->
+    <div class="bg-gradient-to-b from-[#FFFDF8] to-[#FFF8EC] rounded-2xl p-3 border-2 border-amber-300 my-1 shadow-2xs space-y-2">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1.5 font-black text-xs text-amber-950">
+          <span class="text-base">📖</span>
+          <span>當日教師教學日誌 (上課內容與紀事)</span>
+        </div>
+        <span class="text-[10px] text-amber-800 font-bold bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
+          💾 自動即時儲存
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black text-amber-900 mb-0.5">📚 本日教學主題 / 繪本共讀篇目：</label>
+        <input type="text" id="journal-lesson-topic" oninput="saveCurrentTeachingLog()" placeholder="例如：《生氣湯》繪本共讀、聲調第二聲第三聲聽讀、午後深呼吸SEL引導..." class="w-full px-2.5 py-1.5 text-xs font-bold rounded-xl border border-amber-300 bg-white text-slate-800 focus:ring-2 focus:ring-amber-400 outline-none">
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-black text-amber-900 mb-0.5">📝 課堂綜合紀事 / 教學觀察筆記：</label>
+        <textarea id="journal-lesson-content" oninput="saveCurrentTeachingLog()" rows="3" placeholder="記錄今日全班學習狀況、教學省思、突發情況或下次課堂提醒..." class="w-full p-2 text-xs font-bold rounded-xl border border-amber-300 bg-white text-slate-800 focus:ring-2 focus:ring-amber-400 outline-none resize-none select-text leading-relaxed"></textarea>
       </div>
     </div>
 
@@ -1262,7 +1286,7 @@ function getOrCreateSheet(ss, name) {
         <span class="flex items-center gap-1">🚨 本日優先關懷隊員 (情緒雷達)：</span>
         <span id="drawer-alert-count" class="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full font-black border border-rose-300">0 位</span>
       </div>
-      <div id="care-student-list" class="space-y-1.5 max-h-28 overflow-y-auto pr-1 scrollbar-hidden"></div>
+      <div id="care-student-list" class="space-y-1.5 max-h-24 overflow-y-auto pr-1 scrollbar-hidden"></div>
     </div>
 
     <!-- 全班隊員個別化關懷備忘錄 (隨填即存) -->
@@ -2747,7 +2771,7 @@ function getOrCreateSheet(ss, name) {
         return;
       }
 
-      showToast("☁️ 正在備份資料上傳至 Google 試算表 (包含照片、每週筆記與禮品)...");
+      showToast("☁️ 正在備份資料上傳至 Google 試算表 (包含教學日誌、照片與禮品)...");
 
       const payload = {
         action: "upload",
@@ -2755,6 +2779,7 @@ function getOrCreateSheet(ss, name) {
         shopItems: shopItems,
         history: safeStorageGet("forest_sel_history", {}),
         weeklyNotes: safeStorageGet("forest_sel_weekly_notes_v2", {}),
+        teachingLogs: safeStorageGet("forest_sel_teaching_logs_v1", {}),
         timestamp: new Date().toISOString()
       };
 
@@ -2786,7 +2811,7 @@ function getOrCreateSheet(ss, name) {
       showConfirmModal({
         icon: "🔄",
         title: "雲端還原確認",
-        desc: "從 Google 試算表還原將會覆蓋本機目前的名冊、照片、每週筆記與小舖禮品，確定要繼續嗎？",
+        desc: "從 Google 試算表還原將會覆蓋本機目前的名冊、教學日誌、每週筆記與小舖禮品，確定要繼續嗎？",
         onConfirm: () => {
           showToast("☁️ 正在從雲端還原資料與學生照片...");
           fetch(gasUrl + "?action=fetch")
@@ -2804,10 +2829,11 @@ function getOrCreateSheet(ss, name) {
               }
               if (backup.history) safeStorageSet("forest_sel_history", backup.history);
               if (backup.weeklyNotes) safeStorageSet("forest_sel_weekly_notes_v2", backup.weeklyNotes);
+              if (backup.teachingLogs) safeStorageSet("forest_sel_teaching_logs_v1", backup.teachingLogs);
 
               renderStudents();
               renderCareList();
-              showToast("🎉 成功從雲端還原名冊、相片、每週筆記與禮物清單！");
+              showToast("🎉 成功從雲端還原名冊、相片、教學日誌與每週筆記！");
             } else {
               showToast("❌ 還原失敗：" + (resData.message || "雲端尚無備份"));
             }
@@ -2821,12 +2847,13 @@ function getOrCreateSheet(ss, name) {
 
     function exportLocalJSON() {
       const backupObj = {
-        version: "v7_weekly_notes",
+        version: "v8_teaching_logs",
         exportTime: new Date().toISOString(),
         students: students,
         shopItems: shopItems,
         history: safeStorageGet("forest_sel_history", {}),
-        weeklyNotes: safeStorageGet("forest_sel_weekly_notes_v2", {})
+        weeklyNotes: safeStorageGet("forest_sel_weekly_notes_v2", {}),
+        teachingLogs: safeStorageGet("forest_sel_teaching_logs_v1", {})
       };
 
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
@@ -2857,7 +2884,7 @@ function getOrCreateSheet(ss, name) {
           showConfirmModal({
             icon: "📤",
             title: "匯入備份檔案確認",
-            desc: `確定要匯入此備份檔 (${file.name}) 嗎？本機紀錄、相片、每週筆記將被取代。`,
+            desc: `確定要匯入此備份檔 (${file.name}) 嗎？本機紀錄、教學日誌、每週筆記將被取代。`,
             onConfirm: () => {
               students = backupObj.students;
               safeStorageSet("forest_sel_students_v5", students);
@@ -2867,6 +2894,7 @@ function getOrCreateSheet(ss, name) {
               }
               if (backupObj.history) safeStorageSet("forest_sel_history", backupObj.history);
               if (backupObj.weeklyNotes) safeStorageSet("forest_sel_weekly_notes_v2", backupObj.weeklyNotes);
+              if (backupObj.teachingLogs) safeStorageSet("forest_sel_teaching_logs_v1", backupObj.teachingLogs);
 
               renderStudents();
               renderCareList();
@@ -2947,6 +2975,7 @@ function getOrCreateSheet(ss, name) {
       }
 
       drawer.classList.toggle("translate-x-full");
+      loadCurrentTeachingLog();
       renderCareList();
     }
 
@@ -2956,7 +2985,52 @@ function getOrCreateSheet(ss, name) {
       if (label && weekSelect) {
         label.textContent = `💡 正檢視/記錄第 ${weekSelect.value} 週筆記`;
       }
+      loadCurrentTeachingLog();
       renderCareList();
+    }
+
+    /* 教學日誌讀取與儲存核心邏輯 */
+    function getSelectedDateKey() {
+      const dateInput = document.getElementById("drawer-note-date");
+      return dateInput && dateInput.value ? dateInput.value : new Date().toISOString().slice(0, 10);
+    }
+
+    function saveCurrentTeachingLog() {
+      const dateKey = getSelectedDateKey();
+      const weekSelect = document.getElementById("drawer-note-week");
+      const weekNum = weekSelect ? parseInt(weekSelect.value, 10) : calculateSemesterWeek();
+
+      const topicInput = document.getElementById("journal-lesson-topic");
+      const contentInput = document.getElementById("journal-lesson-content");
+
+      const topic = topicInput ? topicInput.value.trim() : "";
+      const content = contentInput ? contentInput.value.trim() : "";
+
+      let teachingLogs = safeStorageGet("forest_sel_teaching_logs_v1", {});
+      if (!topic && !content) {
+        delete teachingLogs[dateKey];
+      } else {
+        teachingLogs[dateKey] = {
+          date: dateKey,
+          week: weekNum,
+          topic: topic,
+          content: content,
+          updatedAt: new Date().toISOString()
+        };
+      }
+      safeStorageSet("forest_sel_teaching_logs_v1", teachingLogs);
+    }
+
+    function loadCurrentTeachingLog() {
+      const dateKey = getSelectedDateKey();
+      const teachingLogs = safeStorageGet("forest_sel_teaching_logs_v1", {});
+      const log = teachingLogs[dateKey] || {};
+
+      const topicInput = document.getElementById("journal-lesson-topic");
+      const contentInput = document.getElementById("journal-lesson-content");
+
+      if (topicInput) topicInput.value = log.topic || "";
+      if (contentInput) contentInput.value = log.content || "";
     }
 
     function renderCareList() {
@@ -3097,6 +3171,7 @@ function getOrCreateSheet(ss, name) {
 
       const history = safeStorageGet("forest_sel_history", {});
       const weeklyNotes = safeStorageGet("forest_sel_weekly_notes_v2", {});
+      const teachingLogs = safeStorageGet("forest_sel_teaching_logs_v1", {});
       const dates = Object.keys(history).sort();
 
       // 計算全班概況指標
@@ -3122,6 +3197,7 @@ function getOrCreateSheet(ss, name) {
           if (rec) {
             totalTaskOpps++;
             if (rec.reading) totalReading++;
+            if (rec.homework) homeworkCount = (homeworkCount || 0);
             if (rec.homework) totalHomework++;
             if (rec.tidy) totalTidy++;
             if (rec.mood && classMoodStats[rec.mood] !== undefined) {
@@ -3156,6 +3232,8 @@ function getOrCreateSheet(ss, name) {
 
       if (currentTab === "summary") {
         renderClassSummaryView(dynamicView, history, dates, weeklyNotes);
+      } else if (currentTab === "teaching_logs") {
+        renderTeachingLogsView(dynamicView, teachingLogs);
       } else if (currentTab === "weekly_notes") {
         renderWeeklyNotesView(dynamicView, weeklyNotes);
       } else if (currentTab === "individual") {
@@ -3167,6 +3245,96 @@ function getOrCreateSheet(ss, name) {
       if (qualitativeBox) {
         qualitativeBox.textContent = generateComprehensiveRemark(currentTab, studentSelect?.value, avgTaskRate, classMoodStats, totalAttendanceDays);
       }
+    }
+
+    /* 視圖：全學期教學日誌總表 */
+    function renderTeachingLogsView(container, teachingLogs) {
+      const dates = Object.keys(teachingLogs).sort();
+
+      if (dates.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 bg-white rounded-2xl border-2 border-dashed border-amber-200 p-6 space-y-2">
+            <span class="text-4xl block">📖</span>
+            <h4 class="text-sm font-black text-slate-800">目前尚無教師教學日誌紀錄</h4>
+            <p class="text-xs text-slate-500 font-bold max-w-md mx-auto leading-relaxed">
+              請點擊右上角的「📋 關懷筆記與教學日誌」，在上課時隨手填寫「本日教學主題」與「課堂綜合紀事」，系統將在此依日期彙整全學期教學日誌！
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      let logCardsHtml = dates.map(dateKey => {
+        const item = teachingLogs[dateKey];
+        return `
+          <div class="p-3.5 bg-[#FFFDF9] rounded-2xl border-2 border-amber-300 shadow-2xs space-y-2 transition hover:border-amber-400">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-amber-200 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">📅</span>
+                <span class="font-black text-amber-950 text-sm">${item.date}</span>
+                <span class="text-xs font-black bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full border border-amber-300">
+                  第 ${item.week || 1} 週
+                </span>
+              </div>
+              <span class="text-[10px] text-slate-400 font-bold">
+                ${item.updatedAt ? new Date(item.updatedAt).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' }) : ''}
+              </span>
+            </div>
+
+            ${item.topic ? `
+              <div class="text-xs font-black text-emerald-950 bg-emerald-50/80 px-2.5 py-1.5 rounded-xl border border-emerald-200 flex items-center gap-1.5">
+                <span>📚 <strong>教學進度/主題：</strong></span>
+                <span>${item.topic}</span>
+              </div>
+            ` : ''}
+
+            ${item.content ? `
+              <div class="text-xs text-slate-700 font-bold leading-relaxed whitespace-pre-wrap bg-white p-2.5 rounded-xl border border-slate-200">
+                ${item.content}
+              </div>
+            ` : '<div class="text-xs text-slate-400 italic">無額外紀事</div>'}
+          </div>
+        `;
+      }).join("");
+
+      container.innerHTML = `
+        <div class="space-y-3">
+          <div class="bg-amber-50/90 p-3 rounded-2xl border border-amber-300 text-xs font-black text-amber-950 flex items-center justify-between">
+            <span>📖 全學期上課內容與教學日誌彙總（共 ${dates.length} 篇課堂記事）：</span>
+            <button onclick="copyAllTeachingLogs()" class="bg-white hover:bg-amber-100 text-amber-950 border border-amber-400 px-2.5 py-1 rounded-xl text-[11px] font-black transition active:scale-95 shadow-xs">
+              📋 一鍵複製全學期教學日誌
+            </button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            ${logCardsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function copyAllTeachingLogs() {
+      const teachingLogs = safeStorageGet("forest_sel_teaching_logs_v1", {});
+      const dates = Object.keys(teachingLogs).sort();
+
+      if (dates.length === 0) {
+        showToast("⚠️ 尚無教學日誌可複製");
+        return;
+      }
+
+      let content = "【快樂森林學堂・全學期教學日誌與課堂紀事總表】\n\n";
+      dates.forEach(d => {
+        const item = teachingLogs[d];
+        content += `=== 日期：${item.date} (第 ${item.week || 1} 週) ===\n`;
+        if (item.topic) content += `【教學主題/進度】${item.topic}\n`;
+        if (item.content) content += `【課堂紀事/觀察】\n${item.content}\n`;
+        content += "\n";
+      });
+
+      navigator.clipboard.writeText(content).then(() => {
+        showToast("📋 全學期教學日誌已複製至剪貼簿！");
+      }).catch(() => {
+        showToast("📋 複製失敗，請手動複製。");
+      });
     }
 
     /* 視圖 1：全班期末總表 (包含每位學生心情點陣歷程與任務達成) */
@@ -3494,26 +3662,31 @@ function getOrCreateSheet(ss, name) {
     function exportTermCSV() {
       const history = safeStorageGet("forest_sel_history", {});
       const weeklyNotes = safeStorageGet("forest_sel_weekly_notes_v2", {});
+      const teachingLogs = safeStorageGet("forest_sel_teaching_logs_v1", {});
       const dates = Object.keys(history).sort();
 
-      let csvContent = "\uFEFF【期末歷程與上課紀錄總表】\n";
-      csvContent += "日期,學期週次,學生姓名,心情天氣,簽到時間,讀本共讀,課堂任務,桌面整潔,星星數量,該週教師關懷筆記\n";
+      let csvContent = "\uFEFF【期末歷程、學生關懷與教學日誌總表】\n";
+      csvContent += "日期,學期週次,當日教學主題,當日課堂紀事,學生姓名,心情天氣,簽到時間,讀本共讀,課堂任務,桌面整潔,星星數量,個別隊員關懷筆記\n";
 
       if (dates.length > 0) {
         dates.forEach(d => {
+          const log = teachingLogs[d] || {};
+          const logTopic = (log.topic || '').replace(/"/g, '""');
+          const logContent = (log.content || '').replace(/"/g, '""');
+
           students.forEach(st => {
             const rec = history[d]?.[st.id];
             if (rec) {
-              const weekNum = rec.week || 1;
+              const weekNum = rec.week || log.week || 1;
               const noteRec = weeklyNotes[st.id]?.[weekNum];
               const noteText = (typeof noteRec === 'string' ? noteRec : noteRec?.text || '').replace(/"/g, '""');
-              csvContent += `"${d}","第${weekNum}週","${st.surname}${st.name}","${moodMeta[rec.mood]?.label || rec.mood || ''}","${rec.time || ''}","${rec.reading ? 'V' : '-'}","${rec.homework ? 'V' : '-'}","${rec.tidy ? 'V' : '-'}","${rec.stars || st.stars || 0}","${noteText}"\n`;
+              csvContent += `"${d}","第${weekNum}週","${logTopic}","${logContent}","${st.surname}${st.name}","${moodMeta[rec.mood]?.label || rec.mood || ''}","${rec.time || ''}","${rec.reading ? 'V' : '-'}","${rec.homework ? 'V' : '-'}","${rec.tidy ? 'V' : '-'}","${rec.stars || st.stars || 0}","${noteText}"\n`;
             }
           });
         });
       } else {
         students.forEach(st => {
-          csvContent += `"${new Date().toISOString().slice(0,10)}","第1週","${st.surname}${st.name}","${moodMeta[st.mood]?.label || ''}","${st.time || ''}","${st.tasks?.reading ? 'V' : '-'}","${st.tasks?.homework ? 'V' : '-'}","${st.tasks?.tidy ? 'V' : '-'}","${st.stars || 0}",""\n`;
+          csvContent += `"${new Date().toISOString().slice(0,10)}","第1週","","","${st.surname}${st.name}","${moodMeta[st.mood]?.label || ''}","${st.time || ''}","${st.tasks?.reading ? 'V' : '-'}","${st.tasks?.homework ? 'V' : '-'}","${st.tasks?.tidy ? 'V' : '-'}","${st.stars || 0}",""\n`;
         });
       }
 
@@ -3521,12 +3694,12 @@ function getOrCreateSheet(ss, name) {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.setAttribute("href", url);
-      link.setAttribute("download", `森林學堂_期末完整歷程與關懷總表_${new Date().toISOString().slice(0,10)}.csv`);
+      link.setAttribute("download", `森林學堂_期末教學日誌與關懷總表_${new Date().toISOString().slice(0,10)}.csv`);
       document.body.appendChild(link);
       link.click();
       link.remove();
 
-      showToast("📥 期末完整歷程與關懷總表 CSV 已成功匯出！");
+      showToast("📥 期末教學日誌與關懷總表 CSV 已成功匯出！");
     }
 
     function triggerResetDayWithGuard() {
